@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <!-- Package Information -->
+    <id>egovframe</id>
+    <version>4.2.0</version>
+    <title>eGovFrameWork</title>
+    <authors>leejongoyung</authors>
+    <owners>egovframe</owners>
+    <projectUrl>https://egovframe.go.kr</projectUrl>
+    <iconUrl>https://egovframe.go.kr/statics/home/images/logo.png</iconUrl>
+    <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <tags>egovframe java spring framework</tags>
+    
+    <!-- Description -->
+    <summary>eGovFrame is a public software development framework used in South Korea.</summary>
+    <description>
+      eGovFrame (Electronic Government Framework) is a standard framework for developing public sector applications in South Korea. It is built using Java and the Spring framework, providing essential tools for efficient development.
+    </description>
+    <releaseNotes>Initial release of the eGovFrame Chocolatey package.</releaseNotes>
+
+    <!-- Dependencies -->
+    <dependencies>
+      <dependency id="openjdk" version="[17,18)" />
+    </dependencies>
+  </metadata>
+
+  <files>
+    <!-- Script Files -->
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
