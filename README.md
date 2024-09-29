@@ -79,7 +79,7 @@ This will remove eGovFrame from your system, including all files and shortcuts.
 
 ## License
 
-eGovFrame is licensed under the Apache 2.0 license. For more details, visit the [Apache 2.0 License](/LICENSE).
+eGovFrame is licensed under the Apache 2.0 license. For more details, visit the [Apache 2.0 License](/tools/LICENSE.txt).
 
 ## Contact
 

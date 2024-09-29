@@ -79,7 +79,7 @@ choco uninstall egovframe
 
 ## 라이선스
 
-eGovFrame은 Apache 2.0 라이선스를 따릅니다. 자세한 내용은 [Apache 2.0 라이선스](/LICENSE)에서 확인하세요.
+eGovFrame은 Apache 2.0 라이선스를 따릅니다. 자세한 내용은 [Apache 2.0 라이선스](/tools/LICENSE.txt)에서 확인하세요.
 
 ## 연락처
 
