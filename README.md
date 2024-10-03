@@ -39,6 +39,9 @@ To install a specific version of eGovFrame, you can specify the version number l
 
 ``` shell
 choco install egovframe --version=4.2.0
+
+# [Notice] Awaiting distribution approval in the official repository. Use the following command until approval is complete:
+choco install egovframe --version=4.2.0 --pre
 ```
 
 If you omit the version, the latest version will be installed by default.

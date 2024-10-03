@@ -39,6 +39,9 @@ choco install egovframe
 
 ``` shell
 choco install egovframe --version=4.2.0
+
+# [공지] 공식 저장소에서 배포 승인을 기다리고 있습니다. 승인이 완료될 때까지 아래 명령어를 사용하세요:
+choco install egovframe --version=4.2.0 --pre
 ```
 
 버전을 지정하지 않으면 기본적으로 최신 버전이 설치됩니다.
