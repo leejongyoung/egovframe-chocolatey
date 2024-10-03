@@ -5,6 +5,8 @@ eGovFrame Chocolatey 패키지에 오신 것을 환영합니다. Chocolatey는 �
 
 Chocolatey는 윈도우에서 소프트웨어 설치를 자동화하는 강력한 도구로, macOS의 Homebrew나 Linux의 APT와 유사한 역할을 합니다. Chocolatey는 소프트웨어의 종속성 관리, 업데이트 및 제거를 원활하게 처리합니다.
 
+- [eGovFrame 공식 패키지](https://community.chocolatey.org/packages/egovframe)
+
 ## eGovFrame에 대하여
 - **이름**: eGovFrame (전자표준프레임워크)
 - **설명**: eGovFrame은 한국 정부에서 제공하는 오픈소스 프레임워크로, 웹 기반 공공 서비스를 개발하기 위해 설계되었습니다. 정부 표준 개발 플랫폼으로서, 한국 공공 부문의 IT 프로젝트에서 중요한 역할을 하며 전 세계적으로 사용이 가능합니다.
@@ -64,7 +66,7 @@ choco install egovframe --source "C:\path\to\your\nupkg\file"
 3.	설치가 완료되면, 다음 명령어를 사용해 패키지가 정상적으로 설치되었는지 확인할 수 있습니다:
 
 ``` shell
-choco list --local-only
+choco list
 ```
 
 이 명령어는 로컬에 설치된 모든 패키지를 표시하며, 여기에서 egovframe 패키지를 확인할 수 있습니다.

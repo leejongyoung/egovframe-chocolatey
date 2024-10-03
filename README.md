@@ -3,6 +3,8 @@
 ## Introduction
 Welcome to the eGovFrame Chocolatey package. Chocolatey is a package manager for Windows that allows users to install software easily via the command line. This package provides a simple way to install eGovFrame, an open-source framework developed by the government of South Korea. eGovFrame is designed for public sector application development and is widely used as a standardized platform for IT projects in Korea.
 
+- [eGovFrame Official Package](https://community.chocolatey.org/packages/egovframe)
+
 If you're new to Chocolatey, it's a powerful tool similar to Homebrew on macOS or APT on Linux, which automates software installation on Windows. Chocolatey handles software dependencies, updates, and uninstalls seamlessly.
 
 ## About eGovFrame
@@ -64,7 +66,7 @@ Replace "C:\path\to\your\nupkg\file" with the actual path to your .nupkg file. T
 3.	After the installation is complete, you can verify that the package is installed by running:
 
 ``` shell
-choco list --local-only
+choco list
 ```
 
 This will display all locally installed packages, including eGovFrame.
