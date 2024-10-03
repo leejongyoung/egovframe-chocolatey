@@ -5,6 +5,8 @@ eGovFrame Chocolatey 패키지에 오신 것을 환영합니다. Chocolatey는 �
 
 Chocolatey는 윈도우에서 소프트웨어 설치를 자동화하는 강력한 도구로, macOS의 Homebrew나 Linux의 APT와 유사한 역할을 합니다. Chocolatey는 소프트웨어의 종속성 관리, 업데이트 및 제거를 원활하게 처리합니다.
 
+- [eGovFrame 공식 패키지](https://community.chocolatey.org/packages/egovframe)
+
 ## eGovFrame에 대하여
 - **이름**: eGovFrame (전자표준프레임워크)
 - **설명**: eGovFrame은 한국 정부에서 제공하는 오픈소스 프레임워크로, 웹 기반 공공 서비스를 개발하기 위해 설계되었습니다. 정부 표준 개발 플랫폼으로서, 한국 공공 부문의 IT 프로젝트에서 중요한 역할을 하며 전 세계적으로 사용이 가능합니다.
@@ -40,6 +42,34 @@ choco install egovframe --version=4.2.0
 ```
 
 버전을 지정하지 않으면 기본적으로 최신 버전이 설치됩니다.
+
+### 로컬 빌드에서 eGovFrame 설치하기
+
+eGovFrame Chocolatey 패키지에 변경 사항을 적용하고 이를 로컬에서 빌드 및 설치하려면, 다음 단계를 따르세요:
+
+1.	먼저, nuspec 파일을 기반으로 .nupkg 패키지를 생성해야 합니다. 이를 위해 choco pack 명령어를 사용합니다. 다음 명령어를 패키지의 .nuspec 파일이 있는 디렉토리에서 실행하세요:
+
+``` shell
+choco pack
+```
+
+이 명령어는 현재 디렉토리의 .nuspec 파일을 기반으로 egovframe.4.2.0.nupkg와 같은 패키지를 생성합니다.
+
+2.	패키지가 성공적으로 생성되면, 다음으로 해당 패키지를 로컬에서 설치할 수 있습니다. 생성된 .nupkg 파일이 있는 디렉토리에서 다음 명령어를 실행하세요:
+
+``` shell
+choco install egovframe --source "C:\path\to\your\nupkg\file"
+```
+
+여기서 "C:\path\to\your\nupkg\file" 부분을 실제 .nupkg 파일의 경로로 변경해야 합니다. 이 명령어는 Chocolatey가 온라인 소스가 아닌 로컬에서 패키지를 설치하도록 합니다.
+
+3.	설치가 완료되면, 다음 명령어를 사용해 패키지가 정상적으로 설치되었는지 확인할 수 있습니다:
+
+``` shell
+choco list
+```
+
+이 명령어는 로컬에 설치된 모든 패키지를 표시하며, 여기에서 egovframe 패키지를 확인할 수 있습니다.
 
 ### 애플리케이션 설치 경로
 

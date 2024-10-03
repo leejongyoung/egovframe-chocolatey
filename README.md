@@ -3,6 +3,8 @@
 ## Introduction
 Welcome to the eGovFrame Chocolatey package. Chocolatey is a package manager for Windows that allows users to install software easily via the command line. This package provides a simple way to install eGovFrame, an open-source framework developed by the government of South Korea. eGovFrame is designed for public sector application development and is widely used as a standardized platform for IT projects in Korea.
 
+- [eGovFrame Official Package](https://community.chocolatey.org/packages/egovframe)
+
 If you're new to Chocolatey, it's a powerful tool similar to Homebrew on macOS or APT on Linux, which automates software installation on Windows. Chocolatey handles software dependencies, updates, and uninstalls seamlessly.
 
 ## About eGovFrame
@@ -40,6 +42,34 @@ choco install egovframe --version=4.2.0
 ```
 
 If you omit the version, the latest version will be installed by default.
+
+### Installing eGovFrame from a Local Build
+
+If you’ve made changes to the eGovFrame Chocolatey package and need to build and install it locally, follow these steps:
+
+1.	First, generate the .nupkg package from the nuspec file using the choco pack command. Run the following command in the directory where your .nuspec file is located:
+
+``` shell
+choco pack
+```
+
+This will create a .nupkg package (e.g., egovframe.4.2.0.nupkg) based on the .nuspec file in the current directory.
+
+2.	Once the package is successfully created, you can install it locally. From the directory where your .nupkg file is located, run the following command:
+
+``` shell
+choco install egovframe --source "C:\path\to\your\nupkg\file"
+```
+
+Replace "C:\path\to\your\nupkg\file" with the actual path to your .nupkg file. This command tells Chocolatey to install the eGovFrame package from your local build instead of fetching it from an online source.
+
+3.	After the installation is complete, you can verify that the package is installed by running:
+
+``` shell
+choco list
+```
+
+This will display all locally installed packages, including eGovFrame.
 
 ### Application Installation Path
 
