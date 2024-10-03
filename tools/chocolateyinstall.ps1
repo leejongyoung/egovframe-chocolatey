@@ -2,14 +2,17 @@
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $packageName = 'egovframe'
 $url64      = 'https://maven.egovframe.go.kr/publist/HDD1/public/eGovFrameDev-4.2.0-64bit.zip'
+$url64Checksum = '7a6d7948eb0228841f3c76581508ad530c99942c12c5e0cb0f44307d2a55d10b'
 
 $packageArgs = @{
-    packageName   = $env:ChocolateyPackageName
-    unzipLocation = $toolsDir
-    fileType      = 'zip'
-    url64bit      = $url64
-    softwareName  = 'egovframe*'
-    validExitCodes= @(0, 3010, 1641)
+    packageName    = $env:ChocolateyPackageName
+    unzipLocation  = $toolsDir
+    fileType       = 'zip'
+    url64bit       = $url64
+    checksum64     = $url64Checksum
+    checksumType64 = 'sha256'
+    softwareName   = 'egovframe*'
+    validExitCodes = @(0, 3010, 1641)
 }
 
 Install-ChocolateyZipPackage @packageArgs
@@ -30,17 +33,11 @@ $targetPath = Join-Path "$programFilesDir" "eclipse.exe"
 
 if (Test-Path $shortcutPath) {
     Write-Host "기존 Eclipse 바로가기가 바탕화면에 존재합니다. 기존 바로가기를 제거합니다."
-    Remove-Item -Force $shortcutPath
+    Remove-Item -Path $shortcutPath -Force
 }
 
 if (Test-Path $targetPath) {
-    $WScriptShell = New-Object -ComObject WScript.Shell
-    $shortcut = $WScriptShell.CreateShortcut($shortcutPath)
-    $shortcut.TargetPath = $targetPath
-    $shortcut.WorkingDirectory = "$programFilesDir"
-    $shortcut.IconLocation = "$targetPath"
-    $shortcut.Save()
-
+    Install-ChocolateyShortcut -ShortcutFilePath "$shortcutPath" -TargetPath "$targetPath" -WorkingDirectory "$programFilesDir" -IconLocation "$targetPath"
     Write-Host "Eclipse 바로가기가 바탕화면에 생성되었습니다."
 } else {
     Write-Host "Eclipse 실행 파일을 찾을 수 없습니다. 경로를 확인하세요: $targetPath"

@@ -13,7 +13,7 @@ if (Test-Path $programFilesDir) {
 
 if (Test-Path $shortcutPath) {
     Write-Host "바탕화면의 Eclipse 바로가기를 삭제합니다."
-    Remove-Item -Force -Path $shortcutPath
+    Remove-Item -Path $shortcutPath -Force
 } else {
     Write-Warning "바탕화면에 Eclipse 바로가기가 존재하지 않습니다."
 }
@@ -22,22 +22,16 @@ if (Test-Path $shortcutPath) {
 
 if ($key.Count -eq 1) {
     $key | % {
-        $packageArgs = @ {
-            packageName   = $packageName
-            softwareName  = $_.DisplayName
-            fileType      = 'MSI_OR_EXE'
-            silentArgs    = '/qn /norestart'
-            validExitCodes = @(0, 3010, 1605, 1614, 1641)
-        }
-
-        if ($_.UninstallString -match 'msiexec') {
-            $packageArgs['silentArgs'] = "$($_.PSChildName) $($packageArgs['silentArgs'])"
-            $packageArgs['file'] = ''
-        } else {
-            $packageArgs['file'] = "$($_.UninstallString)"
-        }
-
-        Uninstall-ChocolateyPackage @packageArgs
+        $installerType = 'MSI_OR_EXE'
+        $silentArgs = '/qn /norestart'
+        $validExitCodes = @(0, 3010, 1605, 1614, 1641)
+        $file = $_.UninstallString
+        
+        Uninstall-ChocolateyPackage -PackageName $packageName `
+                                    -FileType $installerType `
+                                    -SilentArgs $silentArgs `
+                                    -ValidExitCodes $validExitCodes `
+                                    -File $file
     }
 } elseif ($key.Count -eq 0) {
     Write-Warning "$packageName는 이미 제거되었습니다."

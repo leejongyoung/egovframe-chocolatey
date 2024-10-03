@@ -20,6 +20,13 @@
     </description>
     <releaseNotes>Initial release of the eGovFrame Chocolatey package.</releaseNotes>
 
+    <!-- Package Source URL -->
+    <packageSourceUrl>https://github.com/leejongyoung/egovframe-chocolatey</packageSourceUrl>
+    
+    <!-- Optional Information -->
+    <docsUrl>https://www.egovframe.go.kr/wiki</docsUrl>
+    <bugTrackerUrl>https://www.egovframe.go.kr/home/sub.do?menuNo=69</bugTrackerUrl>
+    
     <!-- Dependencies -->
     <dependencies>
       <dependency id="openjdk" version="[17,18)" />
