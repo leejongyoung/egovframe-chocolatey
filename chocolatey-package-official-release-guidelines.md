@@ -40,7 +40,7 @@ choco pack
 패키지를 배포하기 전에 테스트 환경에서 Chocolatey 패키지를 설치하고 작동 여부를 확인합니다.
 
 ``` shell
-choco install egovframe --version=4.2.0
+choco install egovframe --version=4.3.1
 ```
 
 ##  API Key 생성 및 패키지 업로드
@@ -54,7 +54,7 @@ API 키를 사용하여 패키지를 Chocolatey 저장소에 업로드합니다.
 
 ``` shell
 choco apikey --key <API 키> --source https://push.chocolatey.org/
-choco push egovframe.4.2.0.nupkg --source https://push.chocolatey.org/
+choco push egovframe.4.3.1.nupkg --source https://push.chocolatey.org/
 ```
 
 ### 패키지 검토 및 승인
@@ -67,5 +67,5 @@ choco push egovframe.4.2.0.nupkg --source https://push.chocolatey.org/
 
 ``` shell
 choco pack
-choco push egovframe.4.3.0.nupkg --source https://push.chocolatey.org/
+choco push egovframe.4.3.1.nupkg --source https://push.chocolatey.org/
 ```

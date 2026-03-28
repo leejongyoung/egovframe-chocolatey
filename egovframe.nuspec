@@ -3,12 +3,12 @@
   <metadata>
     <!-- Package Information -->
     <id>egovframe</id>
-    <version>4.2.0</version>
+    <version>4.3.1</version>
     <title>eGovFrameWork</title>
-    <authors>leejongoyung</authors>
+    <authors>leejongyoung</authors>
     <owners>egovframe</owners>
     <projectUrl>https://egovframe.go.kr</projectUrl>
-    <iconUrl>https://egovframe.go.kr/statics/home/images/logo.png</iconUrl>
+    <iconUrl>https://egovframe.go.kr/statics/rebuild/images/logo.png</iconUrl>
     <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <tags>egovframe java spring framework</tags>
@@ -16,9 +16,41 @@
     <!-- Description -->
     <summary>eGovFrame is a public software development framework used in South Korea.</summary>
     <description>
-      eGovFrame (Electronic Government Framework) is a standard framework for developing public sector applications in South Korea. It is built using Java and the Spring framework, providing essential tools for efficient development.
+      eGovFrame (Electronic Government Framework)은 대한민국 공공부문 애플리케이션 개발을 위한 표준 프레임워크입니다.
+
+      ### [구성]
+      개발자용 개발환경 for Windows 64bit (Implementation Tool) Version 4.3.1은 개발자의 코드 작성을 지원하는 도구로, eGovFrame기반의 어플리케이션 개발을 지원하는 IDE와 Editor(SourceCode, UML, ERD, DBIO, WebFlow, Code Generation, Code Inspection, 공통컴포넌트 생성, 맞춤형 개발환경, Nexus, SVN)와 Debug(Local, Remote), Mobile IDE, Batch IDE, RTE로 구성되어 있습니다.
+
+      ### [설치 및 실행 방법]
+      - 본 패키지는 `C:\Program Files\eGovFrame`에 자동으로 설치됩니다.
+      - 바탕화면에 생성된 `eclipse` 바로가기를 실행합니다.
+      - `eGovFrameDev-4.3.1-64bit` 폴더 내의 `eclipse` 폴더와 `workspace-egov` 폴더를 확인하세요.
+      - `eclipse.exe` 실행 후, `workspace-egov` 경로가 일치하는지 확인하고 Launch를 클릭합니다.
+
+      ### [Troubleshooting]
+      1. **JVM 관련 오류**: `eclipse.ini`에서 JDK 17 경로를 설정해야 할 수 있습니다. (JDK 17 필수)
+         예: `-vm C:\Program Files\Java\jdk-17.x.x\bin\javaw.exe`
+      2. **한글 깨짐**: `eclipse.ini`에 `-Dfile.encoding=UTF-8` 설정을 추가하여 이클립스 파일 포맷을 UTF-8로 설정하세요.
+      3. **템플릿 DML 한글 깨짐**: 해당 DML 파일의 인코딩 형식을 EUC-KR로 변경하여 해결할 수 있습니다.
+
+      **Note: This package only supports 64-bit Windows systems.**
     </description>
-    <releaseNotes>Initial release of the eGovFrame Chocolatey package.</releaseNotes>
+    <releaseNotes>
+      ### [개선 기능]
+
+      #### 1. Version 4.3.1
+      - 공통컴포넌트 4.3.1 보안강화 패치 적용
+      - Boot 기본 게시판, Boot 템플릿, MSA 템플릿, 배치 템플릿의 Spring Framework 버전을 5.3.37로 고정
+      - 공통컴포넌트 생성 마법사 의존성 최신화
+
+      #### 2. Version 4.3.0
+      - Eclipse 2024-03 (4.31.0) 적용
+      - 실행환경 4.3.0 적용
+      - 공통컴포넌트 254종 업그레이드 및 보안강화 패치 적용
+      - 템플릿 프로젝트 3종, 배치 템플릿, Boot 템플릿, MSA 템플릿 등 업그레이드
+      - XML 및 Java Config 설정파일 생성 기능 최신화 및 추가
+      - Logging 설정 파일 생성 시 Properties 및 yaml 지원 추가
+    </releaseNotes>
 
     <!-- Package Source URL -->
     <packageSourceUrl>https://github.com/leejongyoung/egovframe-chocolatey</packageSourceUrl>
@@ -29,7 +61,7 @@
     
     <!-- Dependencies -->
     <dependencies>
-      <dependency id="openjdk" version="[17,18)" />
+      <dependency id="openjdk" version="[17,)" />
     </dependencies>
   </metadata>
 

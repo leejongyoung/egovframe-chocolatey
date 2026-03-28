@@ -1,0 +1,96 @@
+name: Chocolatey Package Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Chocolatey에 패키지를 배포하시겠습니까?'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build package
+        run: choco pack
+
+      - name: Install package from local source
+        run: choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
+
+      - name: Verify installation directory
+        run: |
+          if (Test-Path "C:\Program Files\eGovFrame") {
+            Write-Host "eGovFrame installation directory exists"
+            Get-ChildItem "C:\Program Files\eGovFrame" | Select-Object Name
+          } else {
+            Write-Error "eGovFrame installation directory not found"
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Verify Eclipse executable
+        run: |
+          if (Test-Path "C:\Program Files\eGovFrame\eclipse.exe") {
+            Write-Host "eclipse.exe found"
+          } else {
+            Write-Error "eclipse.exe not found"
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Verify desktop shortcut
+        run: |
+          $shortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) "eclipse.lnk"
+          if (Test-Path $shortcut) {
+            Write-Host "Desktop shortcut created"
+          } else {
+            Write-Warning "Desktop shortcut not found (may not be available in CI)"
+          }
+        shell: pwsh
+
+      - name: Verify package is listed
+        run: choco list | Select-String "egovframe"
+
+      - name: Test uninstall
+        run: choco uninstall egovframe -y
+
+      - name: Verify uninstall cleanup
+        run: |
+          if (Test-Path "C:\Program Files\eGovFrame") {
+            Write-Error "eGovFrame directory still exists after uninstall"
+            exit 1
+          } else {
+            Write-Host "eGovFrame directory cleaned up successfully"
+          }
+        shell: pwsh
+
+  deploy:
+    needs: build-and-test
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build package
+        run: choco pack
+
+      - name: Push package to Chocolatey
+        run: |
+          $nupkg = Get-ChildItem *.nupkg | Select-Object -First 1
+          if ($null -eq $nupkg) {
+              Write-Error "Generated .nupkg file not found"
+              exit 1
+          }
+          choco push $nupkg.FullName --api-key ${{ secrets.CHOCOLATEY_API_KEY }} --source https://push.chocolatey.org/
+        shell: pwsh

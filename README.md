@@ -38,10 +38,7 @@ choco install egovframe
 To install a specific version of eGovFrame, you can specify the version number like this:
 
 ``` shell
-choco install egovframe --version=4.2.0
-
-# [Notice] Awaiting distribution approval in the official repository. Use the following command until approval is complete:
-choco install egovframe --version=4.2.0 --pre
+choco install egovframe --version=4.3.1
 ```
 
 If you omit the version, the latest version will be installed by default.
@@ -56,7 +53,7 @@ If you’ve made changes to the eGovFrame Chocolatey package and need to build a
 choco pack
 ```
 
-This will create a .nupkg package (e.g., egovframe.4.2.0.nupkg) based on the .nuspec file in the current directory.
+This will create a .nupkg package (e.g., egovframe.4.3.1.nupkg) based on the .nuspec file in the current directory.
 
 2.	Once the package is successfully created, you can install it locally. From the directory where your .nupkg file is located, run the following command:
 
@@ -81,7 +78,7 @@ By default, eGovFrame is installed under the C:\Program Files\eGovFrame director
 ## Post Installation Setup
 
 1. Eclipse Shortcut: After installation, an Eclipse (eGovFrame IDE) shortcut will be created on your desktop.
-2. Ensure Java is Installed: eGovFrame requires Java 11 or later. If Java is not installed, OpenJDK 11 will be automatically installed during the installation process.
+2. Ensure Java is Installed: eGovFrame requires Java 17 or later. If Java is not installed, OpenJDK 17 will be automatically installed during the installation process.
 
 ## Automatic Packaging Updates
 

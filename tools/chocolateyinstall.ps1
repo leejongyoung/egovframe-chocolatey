@@ -1,8 +1,8 @@
 ﻿$ErrorActionPreference = 'Stop'
 $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $packageName = 'egovframe'
-$url64 = 'https://maven.egovframe.go.kr/publist/HDD1/public/eGovFrameDev-4.2.0-64bit.zip'
-$url64Checksum = '7a6d7948eb0228841f3c76581508ad530c99942c12c5e0cb0f44307d2a55d10b'
+$url64 = 'https://maven.egovframe.go.kr/publist/HDD1/public/eGovFrameDev-4.3.1-64bit.zip'
+$url64Checksum = 'DC74BC1F729222089B1272CA920B276C392CEC344358537A3A57636C3D5B24E0'
 
 $packageArgs = @{
     packageName    = $env:ChocolateyPackageName

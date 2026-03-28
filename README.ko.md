@@ -38,10 +38,7 @@ choco install egovframe
 특정 버전의 eGovFrame을 설치하려면 다음과 같이 버전 번호를 지정할 수 있습니다:
 
 ``` shell
-choco install egovframe --version=4.2.0
-
-# [공지] 공식 저장소에서 배포 승인을 기다리고 있습니다. 승인이 완료될 때까지 아래 명령어를 사용하세요:
-choco install egovframe --version=4.2.0 --pre
+choco install egovframe --version=4.3.1
 ```
 
 버전을 지정하지 않으면 기본적으로 최신 버전이 설치됩니다.
@@ -56,7 +53,7 @@ eGovFrame Chocolatey 패키지에 변경 사항을 적용하고 이를 로컬에
 choco pack
 ```
 
-이 명령어는 현재 디렉토리의 .nuspec 파일을 기반으로 egovframe.4.2.0.nupkg와 같은 패키지를 생성합니다.
+이 명령어는 현재 디렉토리의 .nuspec 파일을 기반으로 egovframe.4.3.1.nupkg와 같은 패키지를 생성합니다.
 
 2.	패키지가 성공적으로 생성되면, 다음으로 해당 패키지를 로컬에서 설치할 수 있습니다. 생성된 .nupkg 파일이 있는 디렉토리에서 다음 명령어를 실행하세요:
 
