@@ -16,40 +16,40 @@
     <!-- Description -->
     <summary>eGovFrame is a public software development framework used in South Korea.</summary>
     <description>
-      eGovFrame (Electronic Government Framework)은 대한민국 공공부문 애플리케이션 개발을 위한 표준 프레임워크입니다.
+      eGovFrame (Electronic Government Framework) is the standard framework for public sector application development in South Korea.
 
-      ### [구성]
-      개발자용 개발환경 for Windows 64bit (Implementation Tool) Version 4.3.1은 개발자의 코드 작성을 지원하는 도구로, eGovFrame기반의 어플리케이션 개발을 지원하는 IDE와 Editor(SourceCode, UML, ERD, DBIO, WebFlow, Code Generation, Code Inspection, 공통컴포넌트 생성, 맞춤형 개발환경, Nexus, SVN)와 Debug(Local, Remote), Mobile IDE, Batch IDE, RTE로 구성되어 있습니다.
+      ### [Components]
+      The Development Environment for Windows 64-bit (Implementation Tool) Version 4.3.1 is a toolset that supports developers in writing code. It includes an IDE and editors for eGovFrame-based application development (SourceCode, UML, ERD, DBIO, WebFlow, Code Generation, Code Inspection, Common Component Wizard, Customized Dev Environment, Nexus, SVN), as well as Debug (Local, Remote), Mobile IDE, Batch IDE, and RTE.
 
-      ### [설치 및 실행 방법]
-      - 본 패키지는 `C:\Program Files\eGovFrame`에 자동으로 설치됩니다.
-      - 바탕화면에 생성된 `eclipse` 바로가기를 실행합니다.
-      - `eGovFrameDev-4.3.1-64bit` 폴더 내의 `eclipse` 폴더와 `workspace-egov` 폴더를 확인하세요.
-      - `eclipse.exe` 실행 후, `workspace-egov` 경로가 일치하는지 확인하고 Launch를 클릭합니다.
+      ### [Installation and Usage]
+      - This package installs automatically to `C:\Program Files\eGovFrame`.
+      - Launch the `eclipse` shortcut created on the Desktop.
+      - Verify the `eclipse` folder and `workspace-egov` folder inside `eGovFrameDev-4.3.1-64bit`.
+      - After launching `eclipse.exe`, confirm the `workspace-egov` path is correct and click Launch.
 
       ### [Troubleshooting]
-      1. **JVM 관련 오류**: `eclipse.ini`에서 JDK 17 경로를 설정해야 할 수 있습니다. (JDK 17 필수)
-         예: `-vm C:\Program Files\Java\jdk-17.x.x\bin\javaw.exe`
-      2. **한글 깨짐**: `eclipse.ini`에 `-Dfile.encoding=UTF-8` 설정을 추가하여 이클립스 파일 포맷을 UTF-8로 설정하세요.
-      3. **템플릿 DML 한글 깨짐**: 해당 DML 파일의 인코딩 형식을 EUC-KR로 변경하여 해결할 수 있습니다.
+      1. **JVM error**: You may need to set the JDK 17 path in `eclipse.ini`. (JDK 17 required)
+         Example: `-vm C:\Program Files\Java\jdk-17.x.x\bin\javaw.exe`
+      2. **Garbled characters**: Add `-Dfile.encoding=UTF-8` to `eclipse.ini` to set the Eclipse file encoding to UTF-8.
+      3. **Garbled characters in template DML**: Change the encoding of the affected DML file to EUC-KR to resolve the issue.
 
       **Note: This package only supports 64-bit Windows systems.**
     </description>
     <releaseNotes>
-      ### [개선 기능]
+      ### [Improvements]
 
       #### 1. Version 4.3.1
-      - 공통컴포넌트 4.3.1 보안강화 패치 적용
-      - Boot 기본 게시판, Boot 템플릿, MSA 템플릿, 배치 템플릿의 Spring Framework 버전을 5.3.37로 고정
-      - 공통컴포넌트 생성 마법사 의존성 최신화
+      - Applied Common Component 4.3.1 security patch
+      - Pinned Spring Framework version to 5.3.37 for Boot Board, Boot Template, MSA Template, and Batch Template
+      - Updated dependencies for the Common Component Creation Wizard
 
       #### 2. Version 4.3.0
-      - Eclipse 2024-03 (4.31.0) 적용
-      - 실행환경 4.3.0 적용
-      - 공통컴포넌트 254종 업그레이드 및 보안강화 패치 적용
-      - 템플릿 프로젝트 3종, 배치 템플릿, Boot 템플릿, MSA 템플릿 등 업그레이드
-      - XML 및 Java Config 설정파일 생성 기능 최신화 및 추가
-      - Logging 설정 파일 생성 시 Properties 및 yaml 지원 추가
+      - Applied Eclipse 2024-03 (4.31.0)
+      - Applied Runtime Environment 4.3.0
+      - Upgraded 254 Common Components and applied security patches
+      - Upgraded Template Projects (3 types), Batch Template, Boot Template, MSA Template, and more
+      - Updated and added XML and Java Config configuration file generation features
+      - Added Properties and YAML support for Logging configuration file generation
     </releaseNotes>
 
     <!-- Package Source URL -->
