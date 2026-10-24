@@ -1,5 +1,7 @@
 # eGovFrame Chocolatey Package
 
+[![Chocolatey Package Test](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/test.yml)
+
 ## Introduction
 Welcome to the eGovFrame Chocolatey package. Chocolatey is a package manager for Windows that allows users to install software easily via the command line. This package provides a simple way to install eGovFrame, an open-source framework developed by the government of South Korea. eGovFrame is designed for public sector application development and is widely used as a standardized platform for IT projects in Korea.
 
