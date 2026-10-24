@@ -1,0 +1,41 @@
+# eGovFrame Chocolatey Package Documentation Configuration
+# Language of the generated root and .github/ documentation entrypoints.
+# Supported: en, ko, es, vi, ar, fr
+default_language: en
+
+# Localized README sources. The root README.md is generated from default_language
+# by scripts/sync_readme.py; never edit it by hand.
+languages:
+  en: docs/README.en.md
+  ko: docs/README.ko.md
+  es: docs/README.es.md
+  vi: docs/README.vi.md
+  ar: docs/README.ar.md
+  fr: docs/README.fr.md
+
+# Localized Chocolatey package official release guidelines. The root
+# chocolatey-package-official-release-guidelines.md is generated from default_language.
+release_guidelines:
+  en: docs/release-guidelines/release-guidelines.en.md
+  ko: docs/release-guidelines/release-guidelines.ko.md
+  es: docs/release-guidelines/release-guidelines.es.md
+  vi: docs/release-guidelines/release-guidelines.vi.md
+  ar: docs/release-guidelines/release-guidelines.ar.md
+  fr: docs/release-guidelines/release-guidelines.fr.md
+
+# GitHub-discoverable community entrypoints are generated into .github/.
+contributing:
+  en: docs/contributing/CONTRIBUTING.en.md
+  ko: docs/contributing/CONTRIBUTING.ko.md
+  es: docs/contributing/CONTRIBUTING.es.md
+  vi: docs/contributing/CONTRIBUTING.vi.md
+  ar: docs/contributing/CONTRIBUTING.ar.md
+  fr: docs/contributing/CONTRIBUTING.fr.md
+
+security:
+  en: docs/security/SECURITY.en.md
+  ko: docs/security/SECURITY.ko.md
+  es: docs/security/SECURITY.es.md
+  vi: docs/security/SECURITY.vi.md
+  ar: docs/security/SECURITY.ar.md
+  fr: docs/security/SECURITY.fr.md
