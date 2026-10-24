@@ -41,7 +41,7 @@ choco install egovframe --version=5.0.2
 
 1. **바로가기**: 설치 후 바탕화면에 `eGovFrame` 바로가기가 생성됩니다. 직접 실행하려면 `C:\tools\eGovFrame\eclipse\eclipse.exe`를 실행합니다.
 2. **워크스페이스**: 실행하면 `C:\tools\eGovFrame\workspace-egov` 경로가 미리 선택됩니다. 경로를 확인하고 Launch를 클릭합니다.
-3. **Java 필수 요구 사항**: eGovFrame 5.0.2는 **Java 21 이상**이 필수입니다. Java가 설치되어 있지 않은 경우, `openjdk` 패키지가 의존성으로 자동 설치됩니다.
+3. **Java**: eGovFrame 5.0.2는 Java 21 런타임을 포함하고 있어 별도 JDK 없이 Eclipse가 실행되며, 이 패키지는 Java 의존성이 없습니다. Maven, Gradle 등 명령줄 빌드 도구에 JDK 21이 필요하면 `choco install temurin21`처럼 따로 설치합니다.
 
 ## 트러블슈팅 (Troubleshooting)
 

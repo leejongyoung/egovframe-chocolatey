@@ -66,6 +66,36 @@ jobs:
           }
         shell: pwsh
 
+      - name: Smoke test Eclipse with the bundled Java only
+        run: |
+          # The package has no Java dependency: prove Eclipse starts without any system Java.
+          Get-ChildItem Env: | Where-Object { $_.Name -like "JAVA_HOME*" -or $_.Name -eq "JDK_HOME" } | ForEach-Object { Remove-Item "Env:$($_.Name)" }
+          $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -and -not (Test-Path (Join-Path $_ "java.exe")) }) -join ';'
+          if (Get-Command java -ErrorAction SilentlyContinue) {
+            Write-Error "A system Java is still on PATH; the smoke test would not prove anything"
+            exit 1
+          }
+
+          $eclipseDir = Join-Path $env:ChocolateyToolsLocation "eGovFrame\eclipse"
+          $data = Join-Path $env:RUNNER_TEMP "smoke-workspace"
+          Push-Location $eclipseDir
+          try {
+            $output = & ".\eclipsec.exe" -nosplash -consoleLog -data $data -application org.eclipse.equinox.p2.director -listInstalledRoots 2>&1
+            $exitCode = $LASTEXITCODE
+          } finally {
+            Pop-Location
+          }
+          $output | Select-Object -Last 40
+          if ($exitCode -ne 0) {
+            Write-Error "Eclipse headless run failed with exit code $exitCode"
+            exit 1
+          }
+          if (-not ($output | Select-String -SimpleMatch "egovframework")) {
+            Write-Error "eGovFrame features were not reported by the installed Eclipse"
+            exit 1
+          }
+        shell: pwsh
+
       - name: Verify workspace path preselected in launcher
         run: |
           $root = Join-Path $env:ChocolateyToolsLocation "eGovFrame"

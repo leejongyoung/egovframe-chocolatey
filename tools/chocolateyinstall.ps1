@@ -19,15 +19,35 @@ if (Test-Path $stagingDir) {
 }
 New-Item -ItemType Directory -Force -Path $installRoot | Out-Null
 
-$packageArgs = @{
-    packageName    = $env:ChocolateyPackageName
-    unzipLocation  = $stagingDir
-    url64bit       = $url64
-    checksum64     = $checksum64
-    checksumType64 = 'sha256'
+# Download and verify the checksum with the standard helper, then extract with
+# -DisableLogging. By default the helper runs 7z with -bb1 and replays the name of every
+# extracted file (~17,000) through the Chocolatey logger, which is slow on a debug-logging
+# host such as the package verifier (about 10 ms per line).
+$zipDir  = Join-Path $env:TEMP "chocolatey\$($env:ChocolateyPackageName)\$($env:ChocolateyPackageVersion)"
+$zipPath = Join-Path $zipDir "eGovFrameDev-$version-Windows-64bit.zip"
+New-Item -ItemType Directory -Force -Path $zipDir | Out-Null
+
+$downloadArgs = @{
+    PackageName    = $env:ChocolateyPackageName
+    FileFullPath   = $zipPath
+    Url64bit       = $url64
+    Checksum64     = $checksum64
+    ChecksumType64 = 'sha256'
 }
 
-Install-ChocolateyZipPackage @packageArgs
+$unzipArgs = @{
+    PackageName  = $env:ChocolateyPackageName
+    FileFullPath = $zipPath
+    Destination  = $stagingDir
+}
+
+try {
+    Get-ChocolateyWebFile @downloadArgs | Out-Null
+    Get-ChocolateyUnzip @unzipArgs -DisableLogging | Out-Null
+}
+finally {
+    Remove-Item -Recurse -Force $zipDir -ErrorAction SilentlyContinue
+}
 
 foreach ($name in 'eclipse', 'notice') {
     $source = Join-Path $stagingDir $name

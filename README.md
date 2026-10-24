@@ -41,7 +41,7 @@ The package downloads the official `eGovFrameDev-5.0.2-Windows-64bit.zip` (about
 
 1. **Shortcut**: After installation, an `eGovFrame` shortcut is created on your desktop. You can also run `C:\tools\eGovFrame\eclipse\eclipse.exe` directly.
 2. **Workspace**: The launcher preselects `C:\tools\eGovFrame\workspace-egov`. Confirm the path and click Launch.
-3. **Java Requirement**: eGovFrame 5.0.2 requires **Java 21 or later**. If Java is not installed, the `openjdk` package will be automatically installed as a dependency.
+3. **Java**: eGovFrame 5.0.2 ships with its own Java 21 runtime, so Eclipse starts without a separate JDK and this package has no Java dependency. If your build tools (Maven, Gradle, ...) need a JDK 21 on the command line, install one separately, for example `choco install temurin21`.
 
 ## Troubleshooting
 

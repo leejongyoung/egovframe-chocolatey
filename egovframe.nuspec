@@ -22,7 +22,7 @@
       ### [Components]
       The Development Environment for Windows 64-bit (Implementation Tool) is a toolset that supports developers in writing code. It includes an IDE and editors for eGovFrame-based application development (SourceCode, UML, ERD, DBIO, WebFlow, Code Generation, Code Inspection, Common Component Wizard, Customized Dev Environment, Nexus, SVN, Git), as well as Debug (Local, Remote), Mobile IDE, Batch IDE, and RTE.
 
-      This package is built on Eclipse 2025-03 (4.35) with Java 21, and ships the Eclipse IDE together with the preconfigured `workspace-egov` workspace.
+      This package is built on Eclipse 2025-03 (4.35) and ships the Eclipse IDE together with its own Java 21 runtime and the preconfigured `workspace-egov` workspace. No separate JDK is installed; if your build tools (Maven, Gradle, ...) need a JDK 21 on the command line, install one separately (for example `choco install temurin21`).
 
       ### [Installation and Usage]
       - The package downloads the official `eGovFrameDev-5.0.2-Windows-64bit.zip` (about 1.04 GB) from the eGovFrame Maven repository, verifies its SHA-256 checksum, and extracts it to `C:\tools\eGovFrame` (the Chocolatey tools location, `$env:ChocolateyToolsLocation`).
@@ -31,7 +31,7 @@
       - The `workspace-egov` folder is never overwritten on upgrade and is kept on uninstall, because it holds your projects.
 
       ### [Troubleshooting]
-      1. **JVM error**: You may need to set the JDK 21 path in `eclipse.ini`. (JDK 21 required)
+      1. **JVM error**: Eclipse starts with the bundled Java 21 runtime. If it still fails to start, you can point it to your own JDK 21 in `eclipse.ini`. (Java 21 required)
          Example: `-vm C:\Program Files\Java\jdk-21\bin\javaw.exe`
       2. **Garbled characters**: Add `-Dfile.encoding=UTF-8` to `eclipse.ini` to set the Eclipse file encoding to UTF-8.
       3. **Garbled characters in template DML**: Change the encoding of the affected DML file to EUC-KR to resolve the issue.
@@ -63,11 +63,6 @@
     <!-- Optional Information -->
     <docsUrl>https://www.egovframe.go.kr/docs/5.0/</docsUrl>
     <bugTrackerUrl>https://www.egovframe.go.kr/home/sub.do?menuNo=69</bugTrackerUrl>
-
-    <!-- Dependencies -->
-    <dependencies>
-      <dependency id="openjdk" version="[21,)" />
-    </dependencies>
   </metadata>
 
   <files>
