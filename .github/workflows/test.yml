@@ -28,12 +28,13 @@ jobs:
 
       - name: Install package from local source
         run: |
-          $elapsed = Measure-Command {
-            choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
-            if ($LASTEXITCODE -ne 0) { throw "choco install failed with exit code $LASTEXITCODE" }
-          }
+          $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+          choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y --verbose
+          $exitCode = $LASTEXITCODE
+          $stopwatch.Stop()
           # The Chocolatey package verifier limits install to 20 minutes.
-          $minutes = [math]::Round($elapsed.TotalMinutes, 1)
+          $minutes = [math]::Round($stopwatch.Elapsed.TotalMinutes, 1)
+          if ($exitCode -ne 0) { throw "choco install failed with exit code $exitCode after $minutes minutes" }
           Write-Host "Install took $minutes minutes"
           "Install took $minutes minutes (Chocolatey verifier limit: 20 minutes)" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
         shell: pwsh
