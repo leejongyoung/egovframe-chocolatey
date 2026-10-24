@@ -1,36 +1,83 @@
 ﻿$ErrorActionPreference = 'Stop'
-$toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$packageName = 'egovframe'
-$url64 = 'https://maven.egovframe.go.kr/publist/HDD1/public/eGovFrameDev-4.3.1-64bit.zip'
-$url64Checksum = 'DC74BC1F729222089B1272CA920B276C392CEC344358537A3A57636C3D5B24E0'
+
+$version      = '5.0.2'
+$url64        = "https://maven.egovframe.go.kr/publist/HDD1/public/egovframework_v5.0/2_DevelopmentEnvironment/eGovFrame-Dev/$version/eGovFrameDev-$version-Windows-64bit.zip"
+$checksum64   = '55EDE08F05ED12A345B5DD6CC70E8B3A1BA4C8C7ABAB49FB2563032B8F65F8ED'
+
+# Eclipse and the workspace must be writable by the user (plug-in updates, projects),
+# so install under the Chocolatey tools location instead of Program Files.
+$installRoot  = Join-Path (Get-ToolsLocation) 'eGovFrame'
+$eclipseDir   = Join-Path $installRoot 'eclipse'
+$workspaceDir = Join-Path $installRoot 'workspace-egov'
+
+# The archive is extracted into a staging folder on the same volume as the final
+# location, so the final placement below is a rename instead of a copy of ~17,000 files.
+$stagingDir   = Join-Path $installRoot '.staging'
+
+if (Test-Path $stagingDir) {
+    Remove-Item -Recurse -Force $stagingDir
+}
+New-Item -ItemType Directory -Force -Path $installRoot | Out-Null
 
 $packageArgs = @{
     packageName    = $env:ChocolateyPackageName
-    unzipLocation  = $toolsDir
-    fileType       = 'zip'
+    unzipLocation  = $stagingDir
     url64bit       = $url64
-    checksum64     = $url64Checksum
+    checksum64     = $checksum64
     checksumType64 = 'sha256'
-    softwareName   = 'egovframe*'
-    validExitCodes = @(0, 3010, 1641)
 }
 
 Install-ChocolateyZipPackage @packageArgs
 
-$programFilesDir = "${env:ProgramFiles}\eGovFrame"
+foreach ($name in 'eclipse', 'notice') {
+    $source = Join-Path $stagingDir $name
+    if (-not (Test-Path $source)) {
+        throw "Expected '$name' folder not found in the downloaded archive. The archive layout may have changed."
+    }
 
-if (Test-Path "$programFilesDir") {
-    Remove-Item -Recurse -Force "$programFilesDir"
+    $target = Join-Path $installRoot $name
+    if (Test-Path $target) {
+        Remove-Item -Recurse -Force $target
+    }
+    Move-Item -Path $source -Destination $target
 }
 
-Move-Item -Path "$toolsDir\eclipse" -Destination "$programFilesDir" -Force
+# workspace-egov holds user projects: keep an existing one untouched.
+if (Test-Path $workspaceDir) {
+    Write-Host "Keeping existing workspace: $workspaceDir"
+}
+else {
+    $source = Join-Path $stagingDir 'workspace-egov'
+    if (-not (Test-Path $source)) {
+        throw "Expected 'workspace-egov' folder not found in the downloaded archive. The archive layout may have changed."
+    }
+    Move-Item -Path $source -Destination $workspaceDir
+}
+
+Remove-Item -Recurse -Force $stagingDir
+
+# The vendor archive pre-selects a workspace path of its own build machine
+# (C:\eGovFrameDev-<version>-Windows-64bit\workspace-egov). Point it at the installed workspace.
+$idePrefs = Join-Path $eclipseDir 'configuration\.settings\org.eclipse.ui.ide.prefs'
+if (Test-Path $idePrefs) {
+    $escapedWorkspace = ($workspaceDir -replace '\\', '\\') -replace ':', '\:'
+    $content = [System.IO.File]::ReadAllText($idePrefs)
+    $updated = [regex]::Replace(
+        $content,
+        '(?m)^RECENT_WORKSPACES=[^\r\n]*',
+        { param($m) "RECENT_WORKSPACES=$escapedWorkspace" })
+    [System.IO.File]::WriteAllText($idePrefs, $updated, (New-Object System.Text.UTF8Encoding($false)))
+}
 
 $desktopPath = [Environment]::GetFolderPath('Desktop')
-$shortcutPath = Join-Path $desktopPath "eclipse.lnk"
-$targetPath = Join-Path "$programFilesDir" "eclipse.exe"
+$targetPath  = Join-Path $eclipseDir 'eclipse.exe'
 
-Remove-Item -Path $shortcutPath -Force -ErrorAction SilentlyContinue
-
-if (Test-Path $targetPath) {
-    Install-ChocolateyShortcut -ShortcutFilePath "$shortcutPath" -TargetPath "$targetPath" -WorkingDirectory "$programFilesDir" -IconLocation "$targetPath"
+if ($desktopPath -and (Test-Path $targetPath)) {
+    $shortcutPath = Join-Path $desktopPath 'eGovFrame.lnk'
+    Install-ChocolateyShortcut -ShortcutFilePath $shortcutPath -TargetPath $targetPath -WorkingDirectory $eclipseDir -IconLocation $targetPath
 }
+else {
+    Write-Warning 'Desktop shortcut was not created (no Desktop folder for this account). Run eclipse.exe from the install folder instead.'
+}
+
+Write-Host "eGovFrame $version installed to $installRoot"

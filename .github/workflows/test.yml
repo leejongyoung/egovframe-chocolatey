@@ -16,6 +16,8 @@ on:
 jobs:
   build-and-test:
     runs-on: windows-latest
+    env:
+      ChocolateyToolsLocation: C:\tools
 
     steps:
       - name: Checkout repository
@@ -25,22 +27,37 @@ jobs:
         run: choco pack
 
       - name: Install package from local source
-        run: choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
+        run: |
+          $elapsed = Measure-Command {
+            choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
+            if ($LASTEXITCODE -ne 0) { throw "choco install failed with exit code $LASTEXITCODE" }
+          }
+          # The Chocolatey package verifier limits install to 20 minutes.
+          $minutes = [math]::Round($elapsed.TotalMinutes, 1)
+          Write-Host "Install took $minutes minutes"
+          "Install took $minutes minutes (Chocolatey verifier limit: 20 minutes)" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+        shell: pwsh
 
       - name: Verify installation directory
         run: |
-          if (Test-Path "C:\Program Files\eGovFrame") {
-            Write-Host "eGovFrame installation directory exists"
-            Get-ChildItem "C:\Program Files\eGovFrame" | Select-Object Name
-          } else {
-            Write-Error "eGovFrame installation directory not found"
+          $root = Join-Path $env:ChocolateyToolsLocation "eGovFrame"
+          foreach ($name in "eclipse", "notice", "workspace-egov") {
+            if (-not (Test-Path (Join-Path $root $name))) {
+              Write-Error "$name not found under $root"
+              exit 1
+            }
+          }
+          if (Test-Path (Join-Path $root ".staging")) {
+            Write-Error "Staging folder was not cleaned up"
             exit 1
           }
+          Get-ChildItem $root | Select-Object Name
         shell: pwsh
 
       - name: Verify Eclipse executable
         run: |
-          if (Test-Path "C:\Program Files\eGovFrame\eclipse.exe") {
+          $exe = Join-Path $env:ChocolateyToolsLocation "eGovFrame\eclipse\eclipse.exe"
+          if (Test-Path $exe) {
             Write-Host "eclipse.exe found"
           } else {
             Write-Error "eclipse.exe not found"
@@ -48,9 +65,22 @@ jobs:
           }
         shell: pwsh
 
+      - name: Verify workspace path preselected in launcher
+        run: |
+          $root = Join-Path $env:ChocolateyToolsLocation "eGovFrame"
+          $prefs = Get-Content (Join-Path $root "eclipse\configuration\.settings\org.eclipse.ui.ide.prefs")
+          $recent = $prefs | Where-Object { $_ -like "RECENT_WORKSPACES=*" }
+          Write-Host $recent
+          $expected = "RECENT_WORKSPACES=" + ((Join-Path $root "workspace-egov") -replace '\\', '\\' -replace ':', '\:')
+          if ($recent -ne $expected) {
+            Write-Error "Expected '$expected'"
+            exit 1
+          }
+        shell: pwsh
+
       - name: Verify desktop shortcut
         run: |
-          $shortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) "eclipse.lnk"
+          $shortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) "eGovFrame.lnk"
           if (Test-Path $shortcut) {
             Write-Host "Desktop shortcut created"
           } else {
@@ -61,17 +91,51 @@ jobs:
       - name: Verify package is listed
         run: choco list | Select-String "egovframe"
 
+      - name: Add a project marker to the workspace
+        run: |
+          $marker = Join-Path $env:ChocolateyToolsLocation "eGovFrame\workspace-egov\user-project-marker.txt"
+          Set-Content -Path $marker -Value "user data"
+        shell: pwsh
+
+      - name: Reinstall package (upgrade path)
+        run: |
+          choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
+          if ($LASTEXITCODE -ne 0) { throw "choco install failed with exit code $LASTEXITCODE" }
+        shell: pwsh
+
+      - name: Verify workspace survived reinstall
+        run: |
+          $root = Join-Path $env:ChocolateyToolsLocation "eGovFrame"
+          if (-not (Test-Path (Join-Path $root "workspace-egov\user-project-marker.txt"))) {
+            Write-Error "Workspace content was lost on reinstall"
+            exit 1
+          }
+          if (-not (Test-Path (Join-Path $root "eclipse\eclipse.exe"))) {
+            Write-Error "eclipse.exe missing after reinstall"
+            exit 1
+          }
+        shell: pwsh
+
       - name: Test uninstall
-        run: choco uninstall egovframe -y
+        run: |
+          choco uninstall egovframe -y
+          if ($LASTEXITCODE -ne 0) { throw "choco uninstall failed with exit code $LASTEXITCODE" }
+        shell: pwsh
 
       - name: Verify uninstall cleanup
         run: |
-          if (Test-Path "C:\Program Files\eGovFrame") {
-            Write-Error "eGovFrame directory still exists after uninstall"
-            exit 1
-          } else {
-            Write-Host "eGovFrame directory cleaned up successfully"
+          $root = Join-Path $env:ChocolateyToolsLocation "eGovFrame"
+          foreach ($name in "eclipse", "notice", ".staging") {
+            if (Test-Path (Join-Path $root $name)) {
+              Write-Error "$name still exists after uninstall"
+              exit 1
+            }
           }
+          if (-not (Test-Path (Join-Path $root "workspace-egov\user-project-marker.txt"))) {
+            Write-Error "User workspace must be kept on uninstall"
+            exit 1
+          }
+          Write-Host "Uninstall removed the program and kept the workspace"
         shell: pwsh
 
   deploy:

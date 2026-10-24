@@ -3,65 +3,70 @@
   <metadata>
     <!-- Package Information -->
     <id>egovframe</id>
-    <version>4.3.1</version>
-    <title>eGovFrameWork</title>
-    <authors>leejongyoung</authors>
-    <owners>egovframe</owners>
-    <projectUrl>https://egovframe.go.kr</projectUrl>
+    <version>5.0.2</version>
+    <title>eGovFrame Development Environment</title>
+    <authors>eGovFrame</authors>
+    <owners>leejongyoung</owners>
+    <projectUrl>https://www.egovframe.go.kr</projectUrl>
+    <projectSourceUrl>https://github.com/eGovFramework/egovframe-development</projectSourceUrl>
     <iconUrl>https://egovframe.go.kr/statics/rebuild/images/logo.png</iconUrl>
     <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <tags>egovframe java spring framework</tags>
-    
+    <tags>egovframe egov eclipse ide java spring korea framework</tags>
+
     <!-- Description -->
-    <summary>eGovFrame is a public software development framework used in South Korea.</summary>
+    <summary>Eclipse-based development environment of eGovFrame, the standard framework for public sector application development in South Korea.</summary>
     <description>
       eGovFrame (Electronic Government Framework) is the standard framework for public sector application development in South Korea.
 
       ### [Components]
-      The Development Environment for Windows 64-bit (Implementation Tool) Version 4.3.1 is a toolset that supports developers in writing code. It includes an IDE and editors for eGovFrame-based application development (SourceCode, UML, ERD, DBIO, WebFlow, Code Generation, Code Inspection, Common Component Wizard, Customized Dev Environment, Nexus, SVN), as well as Debug (Local, Remote), Mobile IDE, Batch IDE, and RTE.
+      The Development Environment for Windows 64-bit (Implementation Tool) is a toolset that supports developers in writing code. It includes an IDE and editors for eGovFrame-based application development (SourceCode, UML, ERD, DBIO, WebFlow, Code Generation, Code Inspection, Common Component Wizard, Customized Dev Environment, Nexus, SVN, Git), as well as Debug (Local, Remote), Mobile IDE, Batch IDE, and RTE.
+
+      This package is built on Eclipse 2025-03 (4.35) with Java 21, and ships the Eclipse IDE together with the preconfigured `workspace-egov` workspace.
 
       ### [Installation and Usage]
-      - This package installs automatically to `C:\Program Files\eGovFrame`.
-      - Launch the `eclipse` shortcut created on the Desktop.
-      - Verify the `eclipse` folder and `workspace-egov` folder inside `eGovFrameDev-4.3.1-64bit`.
-      - After launching `eclipse.exe`, confirm the `workspace-egov` path is correct and click Launch.
+      - The package downloads the official `eGovFrameDev-5.0.2-Windows-64bit.zip` (about 1.04 GB) from the eGovFrame Maven repository, verifies its SHA-256 checksum, and extracts it to `C:\tools\eGovFrame` (the Chocolatey tools location, `$env:ChocolateyToolsLocation`).
+      - Launch the `eGovFrame` shortcut created on the Desktop, or run `C:\tools\eGovFrame\eclipse\eclipse.exe`.
+      - The workspace dialog proposes `C:\tools\eGovFrame\workspace-egov`. Confirm the path and click Launch.
+      - The `workspace-egov` folder is never overwritten on upgrade and is kept on uninstall, because it holds your projects.
 
       ### [Troubleshooting]
-      1. **JVM error**: You may need to set the JDK 17 path in `eclipse.ini`. (JDK 17 required)
-         Example: `-vm C:\Program Files\Java\jdk-17.x.x\bin\javaw.exe`
+      1. **JVM error**: You may need to set the JDK 21 path in `eclipse.ini`. (JDK 21 required)
+         Example: `-vm C:\Program Files\Java\jdk-21\bin\javaw.exe`
       2. **Garbled characters**: Add `-Dfile.encoding=UTF-8` to `eclipse.ini` to set the Eclipse file encoding to UTF-8.
       3. **Garbled characters in template DML**: Change the encoding of the affected DML file to EUC-KR to resolve the issue.
+      4. **Eclipse launcher cannot find its shared library**: Fix the `-startup` and `-launcher.library` paths in `eclipse.ini`.
 
-      **Note: This package only supports 64-bit Windows systems.**
+      **Note: This package only supports 64-bit Windows systems. The download is large; installation time depends on your network and disk speed.**
     </description>
     <releaseNotes>
       ### [Improvements]
 
-      #### 1. Version 4.3.1
-      - Applied Common Component 4.3.1 security patch
-      - Pinned Spring Framework version to 5.3.37 for Boot Board, Boot Template, MSA Template, and Batch Template
-      - Updated dependencies for the Common Component Creation Wizard
+      #### Version 5.0.2
+      - Applied Eclipse 2025-03 (4.35) with Java 21
+      - Applied Runtime Environment 5.0.0
+      - Applied 253 Common Components, including contributions from 71 developers and security hardening patches (KISA, NSR, ...), and template projects
+      - Upgraded the CRUD Code Generation feature for Runtime Environment 5.0
+      - Upgraded the Config Generation features (Cache, DataSource, Transaction, ID Generation, Property, Logging, Scheduling) for Runtime Environment 5.0
+      - Upgraded the Batch Job Test feature for Runtime Environment 5.0 (JUnit 5)
+      - Upgraded New Batch Job and New Batch Job Launcher for Runtime Environment 5.0 (Spring Batch 5)
+      - Replaced the SVN Connectors with the ArSysOp SVN Connectors
+      - Replaced the class file in the Amateras Modeler plugin to fix a file handle leak (affecting deletion of *.ucd, *.cd, *.sqd files)
+      - Upgraded template projects with security hardening patches and bug fixes
 
-      #### 2. Version 4.3.0
-      - Applied Eclipse 2024-03 (4.31.0)
-      - Applied Runtime Environment 4.3.0
-      - Upgraded 254 Common Components and applied security patches
-      - Upgraded Template Projects (3 types), Batch Template, Boot Template, MSA Template, and more
-      - Updated and added XML and Java Config configuration file generation features
-      - Added Properties and YAML support for Logging configuration file generation
+      Full release notes: https://www.egovframe.go.kr/home/sub.do?menuNo=40
     </releaseNotes>
 
     <!-- Package Source URL -->
     <packageSourceUrl>https://github.com/leejongyoung/egovframe-chocolatey</packageSourceUrl>
-    
+
     <!-- Optional Information -->
-    <docsUrl>https://www.egovframe.go.kr/wiki</docsUrl>
+    <docsUrl>https://www.egovframe.go.kr/docs/5.0/</docsUrl>
     <bugTrackerUrl>https://www.egovframe.go.kr/home/sub.do?menuNo=69</bugTrackerUrl>
-    
+
     <!-- Dependencies -->
     <dependencies>
-      <dependency id="openjdk" version="[17,)" />
+      <dependency id="openjdk" version="[21,)" />
     </dependencies>
   </metadata>
 

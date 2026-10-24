@@ -7,7 +7,7 @@ eGovFrame Chocolatey 패키지에 오신 것을 환영합니다. Chocolatey는 �
 
 ## eGovFrame에 대하여
 - **이름**: eGovFrame (전자표준프레임워크)
-- **버전**: 4.3.1
+- **버전**: 5.0.2 (Windows 64bit 개발환경, Eclipse 2025-03, Java 21)
 - **설명**: eGovFrame은 한국 정부에서 제공하는 오픈소스 프레임워크로, 웹 기반 공공 서비스를 개발하기 위해 설계되었습니다. Java와 Spring 프레임워크를 기반으로 구축되었습니다.
 - **홈페이지**: [eGovFrame 공식 홈페이지](https://www.egovframe.go.kr)
 
@@ -23,27 +23,38 @@ choco install egovframe
 
 특정 버전을 설치하려면 다음과 같이 입력합니다:
 ```shell
-choco install egovframe --version=4.3.1
+choco install egovframe --version=5.0.2
 ```
 
 ### 애플리케이션 설치 경로
-기본적으로 eGovFrame은 `C:\Program Files\eGovFrame` 디렉토리에 설치됩니다.
+기본적으로 eGovFrame은 Chocolatey 도구 경로인 `C:\tools\eGovFrame`(`$env:ChocolateyToolsLocation\eGovFrame`)에 설치됩니다. Program Files가 아닌 이 경로를 쓰는 이유는 관리자 권한 없이도 Eclipse 플러그인 업데이트와 프로젝트 저장이 가능해야 하기 때문입니다.
+
+| 폴더 | 내용 |
+|---|---|
+| `eclipse` | Eclipse IDE (업그레이드 때 교체됨) |
+| `workspace-egov` | eGovFrame 퍼스펙티브가 적용된 워크스페이스 (**업그레이드 때 덮어쓰지 않고, 제거해도 남김**) |
+| `notice` | Amateras Modeler 패치 설명 |
+
+패키지는 공식 `eGovFrameDev-5.0.2-Windows-64bit.zip`(약 1.04GB)을 내려받아 SHA-256을 확인한 뒤 설치합니다. 네트워크와 디스크 속도에 따라 설치에 시간이 걸립니다.
 
 ## 설치 후 설정
 
-1. **Eclipse 바로가기**: 설치 후 바탕화면에 Eclipse (eGovFrame IDE) 바로가기가 생성됩니다.
-2. **Java 필수 요구 사항**: eGovFrame 4.3.1은 **Java 17 이상**이 필수입니다. Java가 설치되어 있지 않은 경우, `openjdk` 패키지가 의존성으로 자동 설치됩니다.
+1. **바로가기**: 설치 후 바탕화면에 `eGovFrame` 바로가기가 생성됩니다. 직접 실행하려면 `C:\tools\eGovFrame\eclipse\eclipse.exe`를 실행합니다.
+2. **워크스페이스**: 실행하면 `C:\tools\eGovFrame\workspace-egov` 경로가 미리 선택됩니다. 경로를 확인하고 Launch를 클릭합니다.
+3. **Java 필수 요구 사항**: eGovFrame 5.0.2는 **Java 21 이상**이 필수입니다. Java가 설치되어 있지 않은 경우, `openjdk` 패키지가 의존성으로 자동 설치됩니다.
 
 ## 트러블슈팅 (Troubleshooting)
 
 1. **JVM 관련 오류 ("Failed to create the Java Virtual Machine")**:
-   설치 경로의 `eclipse.ini` 파일을 열어 JDK 17 경로를 다음과 같이 추가해 주세요:
+   설치 경로의 `eclipse\eclipse.ini` 파일을 열어 JDK 21 경로를 다음과 같이 추가해 주세요:
    ```ini
    -vm
-   C:\Program Files\Java\jdk-17.x.x\bin\javaw.exe
+   C:\Program Files\Java\jdk-21\bin\javaw.exe
    ```
 2. **한글 깨짐 현상**:
    `eclipse.ini` 파일에 `-Dfile.encoding=UTF-8` 설정을 추가하여 이클립스 파일 포맷을 UTF-8로 설정할 수 있습니다.
+3. **템플릿 프로젝트 생성 시 일부 DML 파일의 한글 깨짐**: 해당 DML 파일의 인코딩을 EUC-KR로 변경합니다.
+4. **런처가 공유 라이브러리를 찾지 못하는 오류**: `eclipse.ini`의 `-startup`, `-launcher.library` 경로를 수정합니다.
 
 ## 유지보수 가이드 (GitHub Actions)
 

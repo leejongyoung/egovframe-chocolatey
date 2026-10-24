@@ -7,7 +7,7 @@ Welcome to the eGovFrame Chocolatey package. Chocolatey is a package manager for
 
 ## About eGovFrame
 - **Name**: eGovFrame
-- **Version**: 4.3.1
+- **Version**: 5.0.2 (Windows 64-bit development environment, Eclipse 2025-03, Java 21)
 - **Description**: eGovFrame is an open-source framework provided by the South Korean government for developing web-based public services. It is built using Java and the Spring framework.
 - **Homepage**: [eGovFrame Official Website](https://www.egovframe.go.kr/)
 
@@ -23,27 +23,38 @@ choco install egovframe
 
 To install this specific version:
 ```shell
-choco install egovframe --version=4.3.1
+choco install egovframe --version=5.0.2
 ```
 
 ### Application Installation Path
-By default, eGovFrame is installed under the `C:\Program Files\eGovFrame` directory.
+By default, eGovFrame is installed under the Chocolatey tools location, `C:\tools\eGovFrame` (`$env:ChocolateyToolsLocation\eGovFrame`). This is used instead of Program Files so that Eclipse plug-in updates and your projects are writable without administrator rights.
+
+| Folder | Content |
+|---|---|
+| `eclipse` | Eclipse IDE (replaced on upgrade) |
+| `workspace-egov` | Workspace with the eGovFrame perspective preconfigured (**never overwritten on upgrade, kept on uninstall**) |
+| `notice` | Amateras Modeler patch notes |
+
+The package downloads the official `eGovFrameDev-5.0.2-Windows-64bit.zip` (about 1.04 GB), verifies its SHA-256 checksum, and installs it. Installation time depends on your network and disk speed.
 
 ## Post Installation Setup
 
-1. **Eclipse Shortcut**: After installation, an Eclipse (eGovFrame IDE) shortcut will be created on your desktop.
-2. **Java Requirement**: eGovFrame 4.3.1 requires **Java 17 or later**. If Java is not installed, the `openjdk` package will be automatically installed as a dependency.
+1. **Shortcut**: After installation, an `eGovFrame` shortcut is created on your desktop. You can also run `C:\tools\eGovFrame\eclipse\eclipse.exe` directly.
+2. **Workspace**: The launcher preselects `C:\tools\eGovFrame\workspace-egov`. Confirm the path and click Launch.
+3. **Java Requirement**: eGovFrame 5.0.2 requires **Java 21 or later**. If Java is not installed, the `openjdk` package will be automatically installed as a dependency.
 
 ## Troubleshooting
 
 1. **JVM Error ("Failed to create the Java Virtual Machine")**:
-   Edit `eclipse.ini` in the installation directory and add the path to your JDK 17:
+   Edit `eclipse\eclipse.ini` in the installation directory and add the path to your JDK 21:
    ```ini
    -vm
-   C:\Program Files\Java\jdk-17.x.x\bin\javaw.exe
+   C:\Program Files\Java\jdk-21\bin\javaw.exe
    ```
 2. **Character Encoding Issues**:
    To prevent broken Korean characters, add `-Dfile.encoding=UTF-8` to your `eclipse.ini` file.
+3. **Garbled characters in template DML**: Change the encoding of the affected DML file to EUC-KR.
+4. **Eclipse launcher cannot find its shared library**: Fix the `-startup` and `-launcher.library` paths in `eclipse.ini`.
 
 ## For Maintainers (GitHub Actions)
 

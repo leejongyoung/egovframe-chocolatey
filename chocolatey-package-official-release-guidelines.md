@@ -40,7 +40,7 @@ choco pack
 패키지를 배포하기 전에 테스트 환경에서 Chocolatey 패키지를 설치하고 작동 여부를 확인합니다.
 
 ``` shell
-choco install egovframe --version=4.3.1
+choco install egovframe --version=5.0.2
 ```
 
 ##  API Key 생성 및 패키지 업로드
@@ -54,11 +54,18 @@ API 키를 사용하여 패키지를 Chocolatey 저장소에 업로드합니다.
 
 ``` shell
 choco apikey --key <API 키> --source https://push.chocolatey.org/
-choco push egovframe.4.3.1.nupkg --source https://push.chocolatey.org/
+choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
 ```
 
 ### 패키지 검토 및 승인
 패키지를 업로드하면 Chocolatey 팀에서 패키지를 검토합니다. 검토 과정에서 패키지의 코드, 메타데이터, 의존성 등이 확인되며, 검토가 완료되면 패키지가 공식적으로 배포됩니다. 검토는 일반적으로 몇 시간에서 며칠이 소요될 수 있습니다.
+
+### 자동 검증(verifier) 시간 초과와 면제 요청
+이 패키지는 설치 때 약 1GB의 공식 zip을 내려받습니다. Chocolatey 자동 검증기(verifier)는 install/uninstall 명령을 각각 **20분**으로 제한합니다([공식 문서](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier/)).
+
+- 4.3.1(1.42GB) 제출 때 검증기 로그에서 다운로드 약 11분 + 체크섬 약 11분 후 압축 해제 단계에서 끝났고, 4월 재제출에서도 압축 해제 시작 시점에서 로그가 끝났습니다. 이후 사용자 응답이 없어 2026-05-30에 stale 사유로 rejected 되었습니다.
+- 5.x도 같은 제약이 남아 있으므로, 제출 뒤 검증이 실패하면 패키지 페이지의 리뷰 코멘트에서 **검증기 면제(exempt)** 를 요청합니다. 그때 GitHub Actions 설치·제거 테스트 결과(워크플로우 요약의 설치 소요 시간)와 Chocolatey Test Environment 테스트 결과를 함께 적습니다.
+- 검증 실패 알림을 받으면 15일 안에 코멘트로 응답합니다. 응답하지 않으면 stale로 자동 rejected 됩니다.
 
 ### 패키지 업데이트 및 관리
 패키지의 새로운 버전이 릴리스되면, 동일한 절차로 패키지를 업데이트할 수 있습니다. 또한, Chocolatey 계정에서 패키지 상태를 모니터링하고 필요에 따라 수정할 수 있습니다.
@@ -67,5 +74,5 @@ choco push egovframe.4.3.1.nupkg --source https://push.chocolatey.org/
 
 ``` shell
 choco pack
-choco push egovframe.4.3.1.nupkg --source https://push.chocolatey.org/
+choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
 ```
