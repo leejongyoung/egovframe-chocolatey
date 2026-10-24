@@ -23,7 +23,8 @@ New-Item -ItemType Directory -Force -Path $installRoot | Out-Null
 # -DisableLogging. By default the helper runs 7z with -bb1 and replays the name of every
 # extracted file (~17,000) through the Chocolatey logger, which is slow on a debug-logging
 # host such as the package verifier (about 10 ms per line).
-$zipDir  = Join-Path $env:TEMP "chocolatey\$($env:ChocolateyPackageName)\$($env:ChocolateyPackageVersion)"
+# Chocolatey already points $env:TEMP at its own temp folder while a package script runs.
+$zipDir  = Join-Path $env:TEMP "$($env:ChocolateyPackageName)\$($env:ChocolateyPackageVersion)"
 $zipPath = Join-Path $zipDir "eGovFrameDev-$version-Windows-64bit.zip"
 New-Item -ItemType Directory -Force -Path $zipDir | Out-Null
 
