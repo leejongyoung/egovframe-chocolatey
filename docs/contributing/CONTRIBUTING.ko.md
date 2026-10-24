@@ -18,7 +18,7 @@ choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" 
 
 CI 워크플로우(`test.yml`)는 `windows-latest` 환경에서 패키지 빌드 및 설치를 자동으로 검증합니다.
 
-- 문서 진입점은 자동 생성됩니다. `docs/`의 원본을 수정한 뒤 `python3 scripts/sync_readme.py`를 실행해 `README.md`, `chocolatey-package-official-release-guidelines.md`, `.github/` 진입점을 갱신하세요.
+- 문서 진입점은 자동 생성됩니다. `docs/`의 원본을 수정한 뒤 `python3 scripts/sync_readme.py`를 실행해 `README.md`, `release-guidelines.md`, `.github/` 진입점을 갱신하세요.
 
 ## Security
 

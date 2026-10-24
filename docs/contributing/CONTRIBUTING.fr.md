@@ -18,7 +18,7 @@ choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" 
 
 Le workflow CI (`test.yml`) s'exécute sur `windows-latest` pour vérifier la compilation et l'installation.
 
-- Les points d'entrée de la documentation sont générés : modifiez les sources dans `docs/`, puis exécutez `python3 scripts/sync_readme.py` pour actualiser `README.md`, `chocolatey-package-official-release-guidelines.md` et `.github/`.
+- Les points d'entrée de la documentation sont générés : modifiez les sources dans `docs/`, puis exécutez `python3 scripts/sync_readme.py` pour actualiser `README.md`, `release-guidelines.md` et `.github/`.
 
 ## Security
 

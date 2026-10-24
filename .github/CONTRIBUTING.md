@@ -18,7 +18,7 @@ choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" 
 
 The CI workflow (`test.yml`) runs on `windows-latest` to verify package build and installation.
 
-- Documentation entrypoints are generated: edit the `docs/` sources, then run `python3 scripts/sync_readme.py` to refresh `README.md`, `chocolatey-package-official-release-guidelines.md`, and the `.github/` entrypoints.
+- Documentation entrypoints are generated: edit the `docs/` sources, then run `python3 scripts/sync_readme.py` to refresh `README.md`, `release-guidelines.md`, and the `.github/` entrypoints.
 
 ## Security
 

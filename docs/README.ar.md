@@ -3,7 +3,8 @@
 <!-- latest-badge:start -->
 [![الإطار القياسي للحكومة الإلكترونية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/unversioned/flat-ar.svg)](https://www.egovframe.go.kr/)
 [![Chocolatey Package Test](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/test.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Malware Scan](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/malware-scan.yml/badge.svg)](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/malware-scan.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](../LICENSE)
 <!-- latest-badge:end -->
 
 [![English](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/en/outline.svg)](README.en.md)

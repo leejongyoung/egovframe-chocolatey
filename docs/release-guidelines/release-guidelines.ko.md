@@ -1,4 +1,4 @@
-# Chocolatey 패키지 공식 배포 가이드라인
+# Chocolatey 패키지 릴리스 가이드라인
 
 [![English](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/en/outline.svg)](release-guidelines.en.md)
 [![한국어](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ko/flat.svg)](release-guidelines.ko.md)
@@ -7,78 +7,74 @@
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg)](release-guidelines.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](release-guidelines.fr.md)
 
-이 가이드는 Chocolatey 패키지를 공식적으로 배포하기 위한 절차와 요구 사항을 설명합니다.
+이 문서는 `egovframe` Chocolatey 패키지를 공식적으로 릴리스, 배포, 검증하기 위한 절차와 요구 사항을 설명합니다.
 
-## Chocolatey.org 계정 생성
+## Chocolatey.org 계정 준비
 
-Chocolatey 패키지를 배포하기 위해서는 Chocolatey.org에 계정이 있어야 합니다.
+Chocolatey 커뮤니티 저장소에 패키지를 배포하려면 Chocolatey.org 계정과 API 키가 필요합니다.
 
-### 절차
-1. Chocolatey.org 웹사이트에 접속하여 계정을 생성합니다.
-2. 이메일로 전송된 확인 메일을 통해 계정을 활성화합니다.
+1. [Chocolatey.org](https://community.chocolatey.org/)에서 계정을 생성하고 이메일 인증을 완료합니다.
+2. [API 키 관리 페이지](https://community.chocolatey.org/account)에서 API 키를 확인합니다.
+3. GitHub 저장소의 **Settings > Secrets and variables > Actions**에 `CHOCOLATEY_API_KEY`라는 이름의 Repository Secret으로 등록합니다.
 
-## 패키지 메타데이터 설정
-패키지 메타데이터는 패키지의 이름, 버전, 설명, 저자 등의 정보를 포함합니다. 패키지의 신뢰성과 정확성을 보장하기 위해 메타데이터는 정확하게 작성되어야 합니다.
+## 새 버전 릴리스 절차
 
-`egovframe.nuspec` 파일 참고
+새 eGovFrame 버전이 공식 발표되면 다음 순서로 패키지를 갱신합니다.
 
-### 필수 항목
-```
-- ID: 패키지 고유 식별자 (예: egovframe)
-- Version: 패키지의 버전 (예: 5.0.2)
-- Title: 패키지 제목
-- Authors: 패키지 저자
-- Owners: 패키지 소유자
-- Description: 패키지에 대한 상세 설명
-- LicenseUrl: 라이선스 URL (예: Apache 2.0 License)
-- ProjectUrl: 프로젝트 홈페이지 URL
-- Tags: 패키지를 설명하는 키워드
-```
+### 1. 패키지 메타데이터 갱신
+`egovframe.nuspec` 파일을 열어 다음 항목을 수정합니다:
+- `<version>`: 새 버전 번호 (예: `5.0.2`)
+- `<releaseNotes>`: 릴리스 변경 사항 요약
 
-## 패키지 빌드 및 테스트
+### 2. 설치 스크립트 검증 및 갱신
+`tools/chocolateyinstall.ps1` 파일을 열어 다운로드 URL과 SHA-256 해시를 갱신합니다:
+- 공식 eGovFrame 포털([다운로드 페이지](https://www.egovframe.go.kr/home/sub.do?menuNo=40))에서 제공하는 최신 ZIP 파일의 다운로드 URL과 SHA-256 체크섬을 확인합니다.
+- `url64`: 최신 64비트 개발환경 ZIP URL
+- `checksum64`: 공식 공시된 SHA-256 체크섬
 
-### 빌드
-패키지를 배포하려면 .nuspec 파일을 기반으로 .nupkg 파일을 생성해야 합니다. 다음 명령어를 사용하여 패키지를 빌드합니다.
-
+### 3. 로컬 패키지 빌드 및 테스트
 ```shell
+# 패키지 빌드 (.nupkg 생성)
 choco pack
+
+# 로컬 파일로부터 설치 테스트
+choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
 ```
 
-### 테스트
-패키지를 배포하기 전에 테스트 환경에서 Chocolatey 패키지를 설치하고 작동 여부를 확인합니다.
+### 4. 악성코드 사전 검사 (`malware-scan.yml`)
+공식 포털 ZIP 파일(~1GB)의 무결성과 보안을 사전에 입증하기 위해 GitHub Actions의 **Malware Scan** 워크플로우를 실행합니다:
+1. GitHub 저장소의 **Actions** 탭으로 이동합니다.
+2. **Malware Scan** 워크플로우를 선택하고 **Run workflow**를 클릭합니다.
+3. 이 워크플로우는 세 가지 증거를 생성합니다:
+   - **출처 증증(Provenance)**: 설치 스크립트의 SHA-256 해시 및 포털 공시 MD5/SHA1 대조
+   - **Microsoft Defender**: 최신 서명 업데이트 후 전체 검사 (EICAR 양성 대조군 포함)
+   - **ClamAV**: 최신 서명 업데이트 후 전체 검사 (EICAR 양성 대조군 포함)
 
+## 패키지 배포 (Deployment)
+
+패키지를 배포하는 방법은 두 가지입니다.
+
+### 방법 1: GitHub Actions 자동 배포 (권장)
+1. GitHub 저장소의 **Actions** 탭으로 이동합니다.
+2. **Chocolatey Package Test** 워크플로우를 선택합니다.
+3. **Run workflow**를 클릭합니다.
+4. **"Chocolatey에 패키지를 배포하시겠습니까?"** 체크박스를 선택하고 **Run workflow**를 실행합니다.
+5. Windows 러너에서 패키지 빌드 및 설치 테스트를 통과한 후, 등록된 `CHOCOLATEY_API_KEY`를 통해 커뮤니티 저장소로 자동 푸시됩니다.
+
+### 방법 2: 로컬 수동 배포 (CLI)
 ```shell
-choco install egovframe --version=5.0.2
-```
-
-## API Key 생성 및 패키지 업로드
-
-### API Key 생성
-1. [API 키 관리 페이지](https://community.chocolatey.org/account)에 접속하여 API 키를 확인합니다.
-2. API 키를 복사합니다.
-
-### 패키지 업로드
-API 키를 사용하여 패키지를 Chocolatey 저장소에 업로드합니다.
-
-```shell
-choco apikey --key <API 키> --source https://push.chocolatey.org/
+choco apikey --key <CHOCOLATEY_API_KEY> --source https://push.chocolatey.org/
 choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
 ```
 
-### 패키지 검토 및 승인
-패키지를 업로드하면 Chocolatey 팀에서 패키지를 검토합니다. 검토 과정에서 패키지의 코드, 메타데이터, 의존성 등이 확인되며, 검토가 완료되면 패키지가 공식적으로 배포됩니다. 검토는 일반적으로 몇 시간에서 며칠이 소요될 수 있습니다.
+## 자동 검증기(Verifier) 시간 초과 및 면제(Exemption) 요청
 
-### 자동 검증(verifier) 시간 초과와 면제 요청
-이 패키지는 설치 때 약 1GB의 공식 zip을 내려받습니다. Chocolatey 자동 검증기(verifier)는 install/uninstall 명령을 각각 **20분**으로 제한합니다([공식 문서](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier/)).
+이 패키지는 약 1GB 용량의 공식 ZIP을 설치 중에 다운로드합니다. Chocolatey 자동 검증기(Package Verifier)는 설치 및 제거 명령에 각각 **20분**의 제한 시간을 적용합니다([공식 문서](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier/)).
 
-- 4.3.1(1.42GB) 제출 때 검증기 로그에서 다운로드 약 11분 + 체크섬 약 11분 후 압축 해제 단계에서 끝났고, 4월 재제출에서도 압축 해제 시작 시점에서 로그가 끝났습니다. 이후 사용자 응답이 없어 2026-05-30에 stale 사유로 rejected 되었습니다.
-- 5.x도 같은 제약이 남아 있으므로, 제출 뒤 검증이 실패하면 패키지 페이지의 리뷰 코멘트에서 **검증기 면제(exempt)** 를 요청합니다. 그때 GitHub Actions 설치·제거 테스트 결과(워크플로우 요약의 설치 소요 시간)와 Chocolatey Test Environment 테스트 결과를 함께 적습니다.
-- 검증 실패 알림을 받으면 15일 안에 코멘트로 응답합니다. 응답하지 않으면 stale로 자동 rejected 됩니다.
-
-### 패키지 업데이트 및 관리
-패키지의 새로운 버전이 릴리스되면, 동일한 절차로 패키지를 업데이트할 수 있습니다. 또한, Chocolatey 계정에서 패키지 상태를 모니터링하고 필요에 따라 수정할 수 있습니다.
-
-```shell
-choco pack
-choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
-```
+### 면제 요청 대응 지침
+- 대용량 파일 특성상 검증기 환경의 네트워크/디스크 속도에 따라 20분 제한 시간을 초과하여 실패할 수 있습니다.
+- 패키지 제출 후 검증기 실패 알림이 오면 **15일 이내**에 패키지 페이지 리뷰 코멘트에 **검증기 면제(exempt)** 를 요청해야 합니다 (미응답 시 stale로 자동 거절됨).
+- 리뷰 코멘트 작성 시 다음 증거를 첨부합니다:
+  1. **GitHub Actions 설치 테스트 결과**: `test.yml` 워크플로우 요약(Step Summary)에 기록된 실제 설치 소요 시간
+  2. **보안 검사 결과**: `malware-scan.yml` 워크플로우의 공식 포털 해시 대조 결과 및 Defender / ClamAV 검사 결과
+  3. **Chocolatey Test Environment (Vagrant)** 로컬 테스트 성공 로그

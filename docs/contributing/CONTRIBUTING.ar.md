@@ -18,7 +18,7 @@ choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" 
 
 يعمل سير عمل CI (`test.yml`) على `windows-latest` للتحقق من بناء الحزمة وتثبيتها.
 
-- يتم إنشاء نقاط الدخول للتوثيق تلقائيًا: قم بتعديل المصادر في `docs/` ثم شغّل `python3 scripts/sync_readme.py` لتحديث `README.md` و `chocolatey-package-official-release-guidelines.md` ونقاط دخول `.github/`.
+- يتم إنشاء نقاط الدخول للتوثيق تلقائيًا: قم بتعديل المصادر في `docs/` ثم شغّل `python3 scripts/sync_readme.py` لتحديث `README.md` و `release-guidelines.md` ونقاط دخول `.github/`.
 
 ## Security
 

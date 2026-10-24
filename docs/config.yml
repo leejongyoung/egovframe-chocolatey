@@ -13,8 +13,8 @@ languages:
   ar: docs/README.ar.md
   fr: docs/README.fr.md
 
-# Localized Chocolatey package official release guidelines. The root
-# chocolatey-package-official-release-guidelines.md is generated from default_language.
+# Localized Chocolatey package release guidelines. The root
+# release-guidelines.md is generated from default_language.
 release_guidelines:
   en: docs/release-guidelines/release-guidelines.en.md
   ko: docs/release-guidelines/release-guidelines.ko.md

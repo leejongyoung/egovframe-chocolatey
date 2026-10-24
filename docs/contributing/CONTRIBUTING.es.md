@@ -18,7 +18,7 @@ choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" 
 
 El flujo de trabajo CI (`test.yml`) se ejecuta en `windows-latest` para verificar la compilación e instalación.
 
-- Los puntos de entrada de documentación se generan: edite las fuentes en `docs/` y ejecute `python3 scripts/sync_readme.py` para actualizar `README.md`, `chocolatey-package-official-release-guidelines.md` y `.github/`.
+- Los puntos de entrada de documentación se generan: edite las fuentes en `docs/` y ejecute `python3 scripts/sync_readme.py` para actualizar `README.md`, `release-guidelines.md` y `.github/`.
 
 ## Security
 

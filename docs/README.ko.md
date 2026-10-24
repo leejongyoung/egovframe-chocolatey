@@ -3,7 +3,8 @@
 <!-- latest-badge:start -->
 [![전자정부표준프레임워크](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/unversioned/flat-ko.svg)](https://www.egovframe.go.kr/)
 [![Chocolatey Package Test](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/test.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Malware Scan](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/malware-scan.yml/badge.svg)](https://github.com/leejongyoung/egovframe-chocolatey/actions/workflows/malware-scan.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](../LICENSE)
 <!-- latest-badge:end -->
 
 [![English](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/en/outline.svg)](README.en.md)
@@ -85,7 +86,7 @@ Chocolatey 커뮤니티 저장소에 새 버전을 배포하려면:
    - *참고: Repository Secrets에 `CHOCOLATEY_API_KEY`가 설정되어 있어야 합니다.*
 
 ## 라이선스
-eGovFrame은 Apache 2.0 라이선스를 따릅니다.
+eGovFrame은 [Apache 2.0 라이선스](../LICENSE)를 따릅니다.
 
 ## 연락처
 더 많은 정보는 [eGovFrame 공식 홈페이지](https://www.egovframe.go.kr)를 방문해 주세요.

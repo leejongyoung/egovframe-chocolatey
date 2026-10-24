@@ -1,4 +1,4 @@
-# إرشادات الإصدار الرسمي لحزمة Chocolatey
+# إرشادات إصدار حزمة Chocolatey
 
 [![English](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/en/outline.svg)](release-guidelines.en.md)
 [![한국어](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ko/outline.svg)](release-guidelines.ko.md)
@@ -7,65 +7,73 @@
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/flat.svg)](release-guidelines.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](release-guidelines.fr.md)
 
-يوضح هذا الدليل الإجراءات والمتطلبات للإصدار الرسمي لحزمة Chocolatey.
+يوضح هذا المستند الإجراءات والمتطلبات للإصدار الرسمي والتوزيع والتحقق من حزمة `egovframe` على Chocolatey.
 
-## إنشاء حساب على Chocolatey.org
-لتوزيع حزم Chocolatey، يجب أن تمتلك حسابًا على Chocolatey.org.
+## إعداد حساب Chocolatey.org
 
-### الخطوات
-1. قم بزيارة موقع Chocolatey.org وإنشاء حساب.
-2. تفعيل الحساب عبر رسالة التأكيد المرسلة إلى بريدك الإلكتروني.
+لتوزيع الحزم في مستودع مجتمع Chocolatey، تحتاج إلى حساب على Chocolatey.org ومفتاح API.
 
-## تكوين البيانات الوصفية للحزمة
-تتضمن البيانات الوصفية الاسم والإصدار والوصف والمؤلفين وما إلى ذلك. راجع ملف `egovframe.nuspec`.
+1. أنشئ حسابًا على [Chocolatey.org](https://community.chocolatey.org/) وأكمل التحقق من البريد الإلكتروني.
+2. احصل على مفتاح API من [صفحة إدارة مفاتيح API](https://community.chocolatey.org/account).
+3. أضفه كـ Repository Secret باسم `CHOCOLATEY_API_KEY` في **Settings > Secrets and variables > Actions** في هذا المستودع.
 
-### الحقول المطلوبة
-```
-- ID: المعرف الفريد للحزمة (مثال: egovframe)
-- Version: إصدار الحزمة (مثال: 5.0.2)
-- Title: عنوان الحزمة
-- Authors: مؤلفو الحزمة
-- Owners: مالكو الحزمة
-- Description: وصف تفصيلي للحزمة
-- LicenseUrl: عنوان URL للترخيص (مثال: ترخيص Apache 2.0)
-- ProjectUrl: عنوان URL لصفحة المشروع
-- Tags: الكلمات المفتاحية التي تصف الحزمة
-```
+## إجراءات إصدار نسخة جديدة
 
-## بناء الحزمة واختبارها
+عند الإعلان رسميًا عن إصدار جديد من eGovFrame، قم بتحديث الحزمة بالخطوات التالية:
 
-### البناء
+### 1. تحديث البيانات الوصفية للحزمة
+افتح `egovframe.nuspec` وقم بتحديث:
+- `<version>`: رقم الإصدار الجديد (مثال: `5.0.2`)
+- `<releaseNotes>`: ملخص تغييرات الإصدار
+
+### 2. التحقق من نص التثبيت وتحديثه
+افتح `tools/chocolateyinstall.ps1` وقم بتحديث عناوين URL للتنزيل وتجزئات SHA-256:
+- تحقق من عنوان URL للتنزيل والمجموع الاختباري SHA-256 لأحدث ملف ZIP من [صفحة تنزيل بوابة eGovFrame الرسمية](https://www.egovframe.go.kr/home/sub.do?menuNo=40).
+- `url64`: عنوان URL لأحدث ملف ZIP لبيئة تطوير 64 بت
+- `checksum64`: المجموع الاختباري SHA-256 المعلن رسميًا
+
+### 3. بناء الحزمة واختبارها محليًا
 ```shell
+# بناء الحزمة (إنشاء .nupkg)
 choco pack
+
+# اختبار التثبيت من المصدر المحلي
+choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
 ```
 
-### الاختبار
+### 4. الفحص المسبق للبرامج الضارة (`malware-scan.yml`)
+لإثبات مصدر وأمان ملف ZIP الرسمي (~1 جيجابايت) مسبقًا، قم بتشغيل سير عمل **Malware Scan**:
+1. انتقل إلى علامة التبويب **Actions** في هذا المستودع.
+2. حدد سير عمل **Malware Scan** وانقر على **Run workflow**.
+3. ينتج سير العمل هذا ثلاثة أدلة:
+   - **المصدر (Provenance)**: مقارنة SHA-256 مع تجزئات MD5/SHA1 المنشورة على البوابة
+   - **Microsoft Defender**: فحص كامل مع توقيعات محدثة (يشمل عينة EICAR القياسية)
+   - **ClamAV**: فحص كامل مع توقيعات محدثة (يشمل عينة EICAR القياسية)
+
+## نشر الحزمة (Deployment)
+
+توجد طريقتان لنشر الحزمة.
+
+### الطريقة 1: النشر الآلي عبر GitHub Actions (موصى بها)
+1. انتقل إلى علامة التبويب **Actions** في هذا المستودع.
+2. حدد سير عمل **Chocolatey Package Test**.
+3. انقر فوق **Run workflow**.
+4. حدد خانة الاختيار **"Chocolatey에 패키지를 배포하시겠습니까?"** ثم انقر فوق **Run workflow**.
+5. بعد اجتياز اختبارات البناء والتثبيت، سيتم رفع الحزمة تلقائيًا باستخدام `CHOCOLATEY_API_KEY`.
+
+### الطريقة 2: النشر اليدوي المحلي (CLI)
 ```shell
-choco install egovframe --version=5.0.2
-```
-
-## إنشاء مفتاح API ورفع الحزمة
-
-### إنشاء مفتاح API
-1. انتقل إلى [صفحة إدارة مفاتيح API](https://community.chocolatey.org/account).
-2. انسخ مفتاح API.
-
-### رفع الحزمة
-```shell
-choco apikey --key <API_KEY> --source https://push.chocolatey.org/
+choco apikey --key <CHOCOLATEY_API_KEY> --source https://push.chocolatey.org/
 choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
 ```
 
-### مراجعة الحزمة والموافقة عليها
-يقوم فريق Chocolatey بمراجعة الكود والبيانات الوصفية والتبعيات. يستغرق ذلك عادة من بضع ساعات إلى بضعة أيام.
+## انتهاء مهلة أداة التحقق الآلي وطلب الإعفاء
 
-### انتهاء مهلة أداة التحقق الآلي وطلب الإعفاء
-تقوم هذه الحزمة بتنزيل ملف zip الرسمي (حوالي 1 جيجابايت) أثناء التثبيت. تحدد أداة التحقق التلقائية أوامر التثبيت/إلغاء التثبيت بـ **20 دقيقة** لكل منها.
-- في حال فشل التحقق بسبب المهلة، اطلب **إعفاء من أداة التحقق (exempt)** في تعليقات المراجعة، مع إرفاق نتائج اختبارات GitHub Actions وبيئة اختبار Chocolatey.
-- يجب الرد خلال 15 يومًا لتجنب الرفض التلقائي.
+أثناء التثبيت، تقوم الحزمة بتنزيل ملف ZIP رسمي (~1 جيجابايت). تحدد أداة التحقق التلقائية أوامر التثبيت وإلغاء التثبيت بـ **20 دقيقة** لكل منها ([التوثيق الرسمي](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier/)).
 
-### تحديث الحزمة
-```shell
-choco pack
-choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
-```
+### إرشادات طلب الإعفاء
+- إذا فشل التحقق بسبب تجاوز المهلة المحددة (20 دقيقة)، يجب الرد خلال **15 يومًا** في تعليقات المراجعة لطلب **إعفاء من التحقق (exempt)**.
+- قم بإرفاق الأدلة التالية في تعليقك:
+  1. **نتائج اختبارات GitHub Actions**: مدة التثبيت الفعلية المسجلة في ملخص سير عمل `test.yml`
+  2. **نتائج فحص الأمان**: مطابقة تجزئات MD5/SHA1 ونتائج فحص Defender / ClamAV من `malware-scan.yml`
+  3. سجلات الاختبار الناجح في **Chocolatey Test Environment (Vagrant)**

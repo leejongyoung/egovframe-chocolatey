@@ -23,7 +23,7 @@ import yaml
 # config group -> generated entrypoint
 ENTRIES = {
     "languages": "README.md",
-    "release_guidelines": "chocolatey-package-official-release-guidelines.md",
+    "release_guidelines": "release-guidelines.md",
     "contributing": ".github/CONTRIBUTING.md",
     "security": ".github/SECURITY.md",
 }

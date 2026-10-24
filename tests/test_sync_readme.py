@@ -106,7 +106,7 @@ class SyncTest(unittest.TestCase):
         root = self.repo("en")
         self.assertEqual(self.run_main(root), 0)
         self.assertTrue((root / "README.md").read_text().startswith("LANG=en\n"))
-        self.assertTrue((root / "chocolatey-package-official-release-guidelines.md").read_text().startswith("GUIDE=en\n"))
+        self.assertTrue((root / "release-guidelines.md").read_text().startswith("GUIDE=en\n"))
         self.assertTrue((root / ".github/CONTRIBUTING.md").read_text().startswith("CONTRIBUTING=en\n"))
         self.assertTrue((root / ".github/SECURITY.md").read_text().startswith("SECURITY=en\n"))
 
@@ -116,7 +116,7 @@ class SyncTest(unittest.TestCase):
         readme = (root / "README.md").read_text()
         self.assertTrue(readme.startswith("LANG=ko\n"))
         self.assertIn("](docs/README.en.md)", readme)
-        guide = (root / "chocolatey-package-official-release-guidelines.md").read_text()
+        guide = (root / "release-guidelines.md").read_text()
         self.assertTrue(guide.startswith("GUIDE=ko\n"))
         self.assertIn("[Back](docs/README.ko.md)", guide)
 

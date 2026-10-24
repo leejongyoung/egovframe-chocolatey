@@ -1,4 +1,4 @@
-# Hướng dẫn phát hành chính thức gói Chocolatey
+# Hướng dẫn phát hành gói Chocolatey
 
 [![English](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/en/outline.svg)](release-guidelines.en.md)
 [![한국어](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ko/outline.svg)](release-guidelines.ko.md)
@@ -7,65 +7,73 @@
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg)](release-guidelines.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](release-guidelines.fr.md)
 
-Tài liệu này giải thích quy trình và yêu cầu để phát hành chính thức gói Chocolatey.
+Tài liệu này giải thích quy trình và yêu cầu để phát hành, phân phối và xác minh chính thức gói Chocolatey `egovframe`.
 
-## Tạo tài khoản Chocolatey.org
-Để phân phối gói Chocolatey, bạn cần có tài khoản tại Chocolatey.org.
+## Chuẩn bị tài khoản Chocolatey.org
 
-### Quy trình
-1. Truy cập trang web Chocolatey.org và đăng ký tài khoản.
-2. Kích hoạt tài khoản qua email xác nhận.
+Để phân phối gói lên Chocolatey Community Repository, bạn cần có tài khoản Chocolatey.org và API key.
 
-## Thiết lập siêu dữ liệu gói
-Siêu dữ liệu gói bao gồm tên, phiên bản, mô tả, tác giả, v.v. Tham khảo tệp `egovframe.nuspec`.
+1. Tạo tài khoản tại [Chocolatey.org](https://community.chocolatey.org/) và hoàn tất xác thực email.
+2. Lấy API key từ [Trang quản lý API Key](https://community.chocolatey.org/account).
+3. Đăng ký thành Repository Secret tên là `CHOCOLATEY_API_KEY` trong **Settings > Secrets and variables > Actions** của kho lưu trữ GitHub này.
 
-### Các trường bắt buộc
-```
-- ID: Mã định danh duy nhất (ví dụ: egovframe)
-- Version: Phiên bản gói (ví dụ: 5.0.2)
-- Title: Tiêu đề gói
-- Authors: Tác giả gói
-- Owners: Chủ sở hữu gói
-- Description: Mô tả chi tiết gói
-- LicenseUrl: URL giấy phép (ví dụ: Apache 2.0 License)
-- ProjectUrl: URL trang chủ dự án
-- Tags: Từ khóa mô tả gói
-```
+## Quy trình phát hành phiên bản mới
 
-## Đóng gói và kiểm thử
+Khi phiên bản eGovFrame mới được công bố chính thức, hãy cập nhật gói theo các bước sau:
 
-### Đóng gói
+### 1. Cập nhật siêu dữ liệu gói
+Mở `egovframe.nuspec` và cập nhật:
+- `<version>`: Số phiên bản mới (ví dụ: `5.0.2`)
+- `<releaseNotes>`: Tóm tắt các thay đổi trong bản phát hành
+
+### 2. Xác minh và cập nhật script cài đặt
+Mở `tools/chocolateyinstall.ps1` và cập nhật URL tải xuống cùng mã băm SHA-256:
+- Kiểm tra URL tải xuống và mã băm SHA-256 của tệp ZIP mới nhất từ [Trang tải xuống cổng eGovFrame](https://www.egovframe.go.kr/home/sub.do?menuNo=40).
+- `url64`: URL tệp ZIP môi trường phát triển 64-bit mới nhất
+- `checksum64`: Mã băm SHA-256 chính thức
+
+### 3. Đóng gói và kiểm thử cục bộ
 ```shell
+# Đóng gói (.nupkg)
 choco pack
+
+# Kiểm thử cài đặt từ nguồn cục bộ
+choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
 ```
 
-### Kiểm thử
+### 4. Quét mã độc trước phát hành (`malware-scan.yml`)
+Để chứng minh nguồn gốc và tính bảo mật của tệp ZIP chính thức (~1 GB), hãy chạy workflow **Malware Scan**:
+1. Chuyển đến tab **Actions** trong kho lưu trữ GitHub này.
+2. Chọn workflow **Malware Scan** và nhấp vào **Run workflow**.
+3. Workflow này tạo ra ba bằng chứng:
+   - **Nguồn gốc (Provenance)**: So sánh SHA-256 từ script cài đặt với mã băm MD5/SHA1 được công bố
+   - **Microsoft Defender**: Quét toàn bộ với cơ sở dữ liệu mới nhất (bao gồm kiểm soát dương EICAR)
+   - **ClamAV**: Quét toàn bộ với cơ sở dữ liệu mới nhất (bao gồm kiểm soát dương EICAR)
+
+## Phân phối gói (Deployment)
+
+Có hai phương pháp để phân phối gói.
+
+### Phương pháp 1: Phân phối tự động qua GitHub Actions (Khuyến nghị)
+1. Chuyển đến tab **Actions** trong kho lưu trữ GitHub này.
+2. Chọn workflow **Chocolatey Package Test**.
+3. Nhấp vào **Run workflow**.
+4. Chọn hộp kiểm **"Chocolatey에 패키지를 배포하시겠습니까?"** và nhấp vào **Run workflow**.
+5. Sau khi vượt qua kiểm thử trên môi trường Windows, gói sẽ tự động được đẩy lên kho cộng đồng bằng `CHOCOLATEY_API_KEY`.
+
+### Phương pháp 2: Phân phối thủ công cục bộ (CLI)
 ```shell
-choco install egovframe --version=5.0.2
-```
-
-## Tạo API Key và tải gói lên
-
-### Tạo API Key
-1. Truy cập [Trang quản lý API Key](https://community.chocolatey.org/account).
-2. Sao chép API Key.
-
-### Tải gói lên
-```shell
-choco apikey --key <API_KEY> --source https://push.chocolatey.org/
+choco apikey --key <CHOCOLATEY_API_KEY> --source https://push.chocolatey.org/
 choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
 ```
 
-### Xem xét và phê duyệt gói
-Đội ngũ Chocolatey sẽ xem xét mã, siêu dữ liệu và các phần phụ thuộc. Quá trình này thường mất vài giờ đến vài ngày.
+## Quá thời gian xác minh tự động và yêu cầu miễn trừ
 
-### Quá thời gian xác minh tự động (verifier) và yêu cầu miễn trừ
-Gói này tải tệp zip chính thức (khoảng 1 GB) khi cài đặt. Trình xác minh tự động giới hạn lệnh cài đặt/gỡ cài đặt ở mức **20 phút** mỗi lệnh.
-- Nếu xác minh hết thời gian chờ, hãy yêu cầu **miễn trừ xác minh (exempt)** trong phần bình luận đánh giá. Cung cấp kết quả kiểm thử từ GitHub Actions và Chocolatey Test Environment.
-- Phản hồi trong vòng 15 ngày kể từ khi nhận thông báo lỗi để tránh bị từ chối tự động.
+Gói này tải tệp ZIP chính thức (~1 GB) trong khi cài đặt. Trình xác minh gói Chocolatey giới hạn các lệnh cài đặt và gỡ cài đặt ở mức **20 phút** mỗi lệnh ([tài liệu chính thức](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier/)).
 
-### Cập nhật gói
-```shell
-choco pack
-choco push egovframe.5.0.2.nupkg --source https://push.chocolatey.org/
-```
+### Hướng dẫn yêu cầu miễn trừ
+- Nếu xác minh thất bại do vượt quá thời gian 20 phút, hãy phản hồi trong vòng **15 ngày** trong phần bình luận đánh giá để yêu cầu **miễn trừ xác minh (exempt)**.
+- Đính kèm các bằng chứng sau vào bình luận:
+  1. **Kết quả kiểm thử GitHub Actions**: Thời gian cài đặt thực tế ghi trong tóm tắt workflow `test.yml`
+  2. **Kết quả quét bảo mật**: Đối chiếu mã băm MD5/SHA1 và kết quả quét Defender / ClamAV từ `malware-scan.yml`
+  3. Nhật ký kiểm thử thành công trên **Chocolatey Test Environment (Vagrant)**

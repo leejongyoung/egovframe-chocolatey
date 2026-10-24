@@ -18,7 +18,7 @@ choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" 
 
 Workflow CI (`test.yml`) chạy trên `windows-latest` để xác minh việc đóng gói và cài đặt.
 
-- Các điểm vào tài liệu được tạo tự động: chỉnh sửa các nguồn trong `docs/`, sau đó chạy `python3 scripts/sync_readme.py` để làm mới `README.md`, `chocolatey-package-official-release-guidelines.md` và `.github/`.
+- Các điểm vào tài liệu được tạo tự động: chỉnh sửa các nguồn trong `docs/`, sau đó chạy `python3 scripts/sync_readme.py` để làm mới `README.md`, `release-guidelines.md` và `.github/`.
 
 ## Security
 
