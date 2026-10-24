@@ -28,15 +28,23 @@ jobs:
 
       - name: Install package from local source
         run: |
-          $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-          choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y --verbose
-          $exitCode = $LASTEXITCODE
-          $stopwatch.Stop()
+          # The vendor download server sometimes stalls or drops the connection (the choco helper
+          # then reports a misleading "forbidden" error). Retry, but say so loudly in the log and summary.
+          $attempts = 0
+          $exitCode = 1
+          while ($exitCode -ne 0 -and $attempts -lt 3) {
+            $attempts++
+            $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+            choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y --verbose
+            $exitCode = $LASTEXITCODE
+            $stopwatch.Stop()
+            if ($exitCode -ne 0) { Write-Warning "Install attempt $attempts failed with exit code $exitCode" }
+          }
           # The Chocolatey package verifier limits install to 20 minutes.
           $minutes = [math]::Round($stopwatch.Elapsed.TotalMinutes, 1)
-          if ($exitCode -ne 0) { throw "choco install failed with exit code $exitCode after $minutes minutes" }
-          Write-Host "Install took $minutes minutes"
-          "Install took $minutes minutes (Chocolatey verifier limit: 20 minutes)" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+          if ($exitCode -ne 0) { throw "choco install failed with exit code $exitCode after $attempts attempts" }
+          Write-Host "Install took $minutes minutes (attempts: $attempts)"
+          "Install took $minutes minutes on attempt $attempts of 3 (Chocolatey verifier limit: 20 minutes)" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
         shell: pwsh
 
       - name: Verify installation directory
@@ -130,8 +138,16 @@ jobs:
 
       - name: Reinstall package (upgrade path)
         run: |
-          choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
-          if ($LASTEXITCODE -ne 0) { throw "choco install failed with exit code $LASTEXITCODE" }
+          $attempts = 0
+          $exitCode = 1
+          while ($exitCode -ne 0 -and $attempts -lt 3) {
+            $attempts++
+            choco install egovframe --source="'.;https://community.chocolatey.org/api/v2/'" --force -y
+            $exitCode = $LASTEXITCODE
+            if ($exitCode -ne 0) { Write-Warning "Reinstall attempt $attempts failed with exit code $exitCode" }
+          }
+          if ($exitCode -ne 0) { throw "choco install failed with exit code $exitCode after $attempts attempts" }
+          "Reinstall succeeded on attempt $attempts of 3" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
         shell: pwsh
 
       - name: Verify workspace survived reinstall
